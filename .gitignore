@@ -4,3 +4,10 @@
 /bootstrap/cache/*
 !/bootstrap/cache/.gitignore
 /storage/**/*.log
+/.env.*
+!/.env.example
+/.phpunit.result.cache
+/public/hot
+/public/build/
+/auth.json
+/.composer/

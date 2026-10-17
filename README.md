@@ -4,19 +4,25 @@ Base Laravel 13 / PHP 8.3+ para diseñar los datos de alquileres de un mercado m
 
 Ver [diagrama ER, cardinalidades y reglas](docs/entidad-relacion.md) y [esquema SQL](database/schema/mercado.sql).
 
-## Instalación
+## Entorno local
 
-Requisitos: PHP con extensiones requeridas por Laravel y `pdo_pgsql`, Composer, PostgreSQL. Crear una base vacía y un usuario con permisos de migración. Si ese usuario no puede instalar extensiones, un administrador debe ejecutar antes `CREATE EXTENSION btree_gist` en esa base.
+PHP 8.3+ con `pdo_pgsql`, Composer y Docker Compose. En este equipo se encontró PHP 8.5.0, Composer 2.8.12 y Laravel Installer 5.32.0 instalados por Herd Lite en `~/.config/herd-lite/bin`; se añadieron accesos en `~/.local/bin`.
 
 ```bash
-composer install
-cp .env.example .env
-# Configurar las credenciales de PostgreSQL en .env
-php artisan key:generate
-php artisan migrate --seed
+cd /home/CarlosQE/dev/personal/mercado-rodriguez
+./scripts/setup --demo
+./scripts/serve
 ```
 
-La migración ejecuta el esquema SQL versionado dentro de la transacción de PostgreSQL. No usar ese archivo como un schema dump de Artisan ni modificarlo después de aplicar la migración: los cambios posteriores corresponden a nuevas migraciones.
+`setup` instala dependencias, prepara `.env` si no existe, genera la clave de aplicación, inicia PostgreSQL 17 y ejecuta las migraciones. `--demo` añade los datos de prueba y sólo debe usarse sobre las tablas del demo vacías. Para volver a preparar un entorno ya sembrado, ejecutar `./scripts/setup` sin ese argumento.
+
+El archivo `.env` local ya está preparado con una clave y contraseña aleatorias; no se versiona. PostgreSQL escucha sólo en `127.0.0.1:5433` y conserva sus datos en un volumen. `docker compose stop` detiene la base sin borrarla. El usuario de PostgreSQL del contenedor tiene privilegios de administración para desarrollo; no reutilizar esa configuración en producción.
+
+La ruta `http://127.0.0.1:8000/up` comprueba el arranque HTTP de Laravel. No verifica la conexión a la base de datos. La raíz `/` devuelve 404 porque esta sesión no implementa interfaz ni rutas de negocio.
+
+Para usar un PostgreSQL existente, configurar `.env`, ejecutar `composer install`, `php artisan key:generate` sólo si falta la clave, y `php artisan migrate --seed`; no ejecutar `setup`, que inicia el contenedor local. La migración instala `btree_gist`: si el usuario no tiene permisos, debe prepararla un administrador.
+
+La migración ejecuta el esquema SQL versionado dentro de la transacción de PostgreSQL. No modificar ese archivo después de aplicar la migración: los cambios posteriores requieren nuevas migraciones.
 
 ## Alcance
 
@@ -31,11 +37,15 @@ WHERE fecha_vencimiento < CURRENT_DATE AND saldo > 0;
 
 ## Verificación
 
-El entorno de elaboración carece de PHP y Composer, no permite acceso a Docker y no puede resolver github.com. No se ejecutaron Laravel ni migraciones y no hay dependencias instaladas ni composer.lock. La revisión estática no sustituye estas comprobaciones en un entorno con PHP/PostgreSQL:
+Comprobado en este equipo: `composer validate --strict` y revisión de sintaxis PHP. La instalación de dependencias se intentó y falló porque el entorno no puede resolver `repo.packagist.org`. Docker Compose está instalado, pero la sesión no tiene permiso para acceder a su socket. Por eso todavía no se han ejecutado Artisan, migraciones ni seeders; no existe `composer.lock` hasta completar la primera instalación.
+
+Una vez instalado el entorno:
 
 ```bash
 composer validate --strict
-find app bootstrap config database routes -name '*.php' -exec php -l {} \;
+find app bootstrap config database routes public -name '*.php' -exec php -l {} \;
+php artisan migrate:status
+# Sólo en una base desechable:
 php artisan migrate:fresh --seed --env=testing
 ```
 
@@ -58,3 +68,7 @@ El seeder usa semilla aleatoria fija y fechas relativas a la ejecución; se ejec
 Las factories permiten construir escenarios pequeños, por ejemplo `Comerciante::factory()->count(5)->create()`. Al sobrescribir IDs relacionados, suministrar referencias compatibles con las fechas y sección; las restricciones SQL siguen activas. `Obligacion::factory()->create()->refresh()` recupera los valores calculados por PostgreSQL.
 
 Después de sembrar, ejecutar `psql` con las credenciales de la base de pruebas y `-v ON_ERROR_STOP=1 -f tests/sql/demo_assertions.sql` para comprobar cantidades y coherencia. Este script aún no se ha ejecutado en el entorno de elaboración.
+
+## Historial Git
+
+Repositorio local inicializado en la rama `main`; sin remoto por ahora. `.env`, credenciales de Composer, dependencias y archivos temporales están excluidos. Después de la primera instalación exitosa, versionar `composer.lock` para fijar las versiones utilizadas.

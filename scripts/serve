@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+export PATH="$HOME/.local/bin:$HOME/.config/herd-lite/bin:$PATH"
+if [[ ! -f vendor/autoload.php ]]; then
+    echo 'Faltan dependencias: ejecutar ./scripts/setup primero.' >&2
+    exit 1
+fi
+exec php artisan serve --host=127.0.0.1 --port="${PORT:-8000}"

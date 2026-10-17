@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+export PATH="$HOME/.local/bin:$HOME/.config/herd-lite/bin:$PATH"
+if [[ $# -gt 1 || ( $# -eq 1 && "$1" != "--demo" ) ]]; then
+    echo 'Uso: ./scripts/setup [--demo]' >&2
+    exit 2
+fi
+for executable in php composer docker; do
+    command -v "$executable" >/dev/null || { echo "Falta instalar: $executable" >&2; exit 1; }
+done
+if [[ ! -f .env ]]; then
+    cp .env.example .env
+    chmod 600 .env
+    php -r '$p=".env"; $s=file_get_contents($p); $s=preg_replace("/^DB_PASSWORD=$/m", "DB_PASSWORD=".bin2hex(random_bytes(24)), $s); file_put_contents($p,$s);'
+fi
+# No se reemplazan contraseñas ni claves que ya estén configuradas.
+composer install --no-interaction --prefer-dist
+if ! grep -Eq '^APP_KEY=.+$' .env; then
+    php artisan key:generate --no-interaction
+fi
+docker compose up -d --wait --wait-timeout 60 postgres
+php artisan migrate --no-interaction
+if [[ "${1:-}" == '--demo' ]]; then
+    php artisan db:seed --no-interaction
+fi
+echo 'Entorno preparado. Ejecutar ./scripts/serve y abrir http://127.0.0.1:8000/up'
