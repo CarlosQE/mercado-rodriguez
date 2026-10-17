@@ -26,10 +26,14 @@
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
       "@php artisan package:discover --ansi"
-    ]
+    ],
+    "test": "@php tests/runtime/check.php"
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "platform": {
+      "php": "8.3.0"
+    }
   },
   "minimum-stability": "stable",
   "prefer-stable": true,

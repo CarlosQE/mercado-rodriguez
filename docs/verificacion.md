@@ -1,6 +1,8 @@
 # Escenarios de aceptación para PostgreSQL
 
-Pendientes de ejecución en una base desechable con dependencias instaladas.
+El 17 de octubre de 2026 se ejecutaron `php tests/runtime/check.php` y `tests/sql/demo_assertions.sql` correctamente. La prueba de integración usa un esquema temporal y comprueba migración/rollback, unicidad, intervalos, cálculo de obligaciones, pagos parciales, sobrepagos, anulaciones, historial, estados, inspecciones, hallazgos y validación/autorización de Requests. Dos procesos con conexiones independientes verifican el pago concurrente.
+
+La prueba detectó que CHECK aceptaba un motivo NULL al anular un pago: se corrigió con la migración `2026_10_17_000002_require_payment_annulment_reason` y se incluyó su regresión. Los puntos siguientes son el catálogo de escenarios de aceptación; algunos amplían la cobertura automatizada actual.
 
 1. Migrar, sembrar dos veces: exactamente cuatro secciones iniciales; rollback y migración posterior sin objetos residuales. La extensión compartida permanece.
 2. Crear puesto y comerciante; rechazar código y documento compuesto duplicados, área cero y referencia inexistente.

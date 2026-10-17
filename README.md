@@ -1,6 +1,6 @@
 # Mercado Rodriguez
 
-Base Laravel 13 / PHP 8.3+ para diseñar los datos de alquileres de un mercado municipal ficticio. PostgreSQL 16+ con extensión `btree_gist`. Sin controladores, vistas ni rutas HTTP.
+Base Laravel 13 / PHP 8.3+ para diseñar los datos de alquileres de un mercado municipal ficticio. PostgreSQL 16+ con extensión `btree_gist`. Sin controladores ni vistas de negocio; sólo una ruta HTTP de salud.
 
 Ver [diagrama ER, cardinalidades y reglas](docs/entidad-relacion.md) y [esquema SQL](database/schema/mercado.sql).
 
@@ -37,19 +37,23 @@ WHERE fecha_vencimiento < CURRENT_DATE AND saldo > 0;
 
 ## Verificación
 
-Comprobado en este equipo: `composer validate --strict` y revisión de sintaxis PHP. La instalación de dependencias se intentó y falló porque el entorno no puede resolver `repo.packagist.org`. Docker Compose está instalado, pero la sesión no tiene permiso para acceder a su socket. Por eso todavía no se han ejecutado Artisan, migraciones ni seeders; no existe `composer.lock` hasta completar la primera instalación.
+Ejecutado el 17 de octubre de 2026 con PHP 8.5.0, Laravel 13.37.0 y PostgreSQL 17:
 
-Una vez instalado el entorno:
+- Dependencias instaladas y fijadas en `composer.lock`; resolución configurada para PHP 8.3 como versión mínima. La ejecución comprobada fue con PHP 8.5.
+- Migraciones y seeder ejecutados: 300 puestos, 280 comerciantes, 1.560 obligaciones, 1.300 pagos, 520 inspecciones y 100 hallazgos.
+- Validación de cantidades y coherencia mediante `tests/sql/demo_assertions.sql`.
+- Pruebas de integración reales: migración/rollback, restricciones, transferencias, estados, inspecciones, pagos/anulaciones, Form Requests y pagos simultáneos.
+- `/up` respondió HTTP 200; `/` respondió 404 como corresponde al alcance actual.
+- `composer validate --strict` y `composer check-platform-reqs` correctos. Composer no reportó avisos de vulnerabilidades en la actualización de dependencias.
+
+Para repetir las pruebas con PostgreSQL iniciado:
 
 ```bash
-composer validate --strict
-find app bootstrap config database routes public -name '*.php' -exec php -l {} \;
-php artisan migrate:status
-# Sólo en una base desechable:
-php artisan migrate:fresh --seed --env=testing
+composer test
+docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1' < tests/sql/demo_assertions.sql
 ```
 
-`migrate:fresh` debe ejecutarse exclusivamente en una base de pruebas vacía/desechable. Revisar además los escenarios de [verificación](docs/verificacion.md).
+`composer test` crea y elimina un esquema temporal aislado en la base configurada; necesita permiso CREATE SCHEMA. No borra ni vuelve a sembrar los datos de demostración. Usa procesos PHP separados para verificar el bloqueo de pagos concurrentes. El script SQL comprueba la siembra de demostración sin modificar filas. Los escenarios complementarios se describen en [verificación](docs/verificacion.md).
 
 Referencias oficiales: [Laravel 13](https://laravel.com/docs/13.x), [Form Requests](https://laravel.com/docs/13.x/validation#form-request-validation).
 
@@ -67,8 +71,8 @@ El seeder usa semilla aleatoria fija y fechas relativas a la ejecución; se ejec
 
 Las factories permiten construir escenarios pequeños, por ejemplo `Comerciante::factory()->count(5)->create()`. Al sobrescribir IDs relacionados, suministrar referencias compatibles con las fechas y sección; las restricciones SQL siguen activas. `Obligacion::factory()->create()->refresh()` recupera los valores calculados por PostgreSQL.
 
-Después de sembrar, ejecutar `psql` con las credenciales de la base de pruebas y `-v ON_ERROR_STOP=1 -f tests/sql/demo_assertions.sql` para comprobar cantidades y coherencia. Este script aún no se ha ejecutado en el entorno de elaboración.
+Después de sembrar, ejecutar `psql` con las credenciales de la base de pruebas y `-v ON_ERROR_STOP=1 -f tests/sql/demo_assertions.sql` para comprobar cantidades y coherencia. El script fue ejecutado correctamente.
 
 ## Historial Git
 
-Repositorio local inicializado en la rama `main`; sin remoto por ahora. `.env`, credenciales de Composer, dependencias y archivos temporales están excluidos. Después de la primera instalación exitosa, versionar `composer.lock` para fijar las versiones utilizadas.
+Repositorio local inicializado en la rama `main`; sin remoto por ahora. `.env`, credenciales de Composer, dependencias y archivos temporales están excluidos. `composer.lock` está versionado para fijar las versiones utilizadas.

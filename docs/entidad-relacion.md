@@ -99,7 +99,7 @@ erDiagram
 
 Cada línea representa uno a cero o muchos; cada hijo pertenece obligatoriamente a un padre. En el tiempo, puestos y comerciantes forman una relación muchos a muchos resuelta por asignaciones. Un puesto admite como máximo una asignación vigente por fecha. Cada tabla tiene timestamps técnicos, omitidos en el diagrama.
 
-El diccionario físico completo, con longitudes, índices, nulabilidad y restricciones, está en `database/schema/mercado.sql`.
+El esquema inicial, con longitudes, índices, nulabilidad y restricciones, está en `database/schema/mercado.sql`. Las migraciones posteriores completan el esquema vigente; la segunda exige explícitamente un motivo no nulo al anular pagos.
 
 ## Decisiones de negocio
 
