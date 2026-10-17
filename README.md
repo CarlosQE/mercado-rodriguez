@@ -1,78 +1,56 @@
 # Mercado Rodriguez
 
-Base Laravel 13 / PHP 8.3+ para diseñar los datos de alquileres de un mercado municipal ficticio. PostgreSQL 16+ con extensión `btree_gist`. Sin controladores ni vistas de negocio; sólo una ruta HTTP de salud.
+Base Laravel para gestionar los alquileres de un mercado municipal ficticio. Esta entrega implementa el diseño y la persistencia: puestos, comerciantes, asignaciones históricas, tarifas por m², obligaciones mensuales, pagos e inspecciones sanitarias.
 
-Ver [diagrama ER, cardinalidades y reglas](docs/entidad-relacion.md) y [esquema SQL](database/schema/mercado.sql).
+**Entrada para el equipo: [guía de documentación](docs/README.md).**
 
-## Entorno local
+## Estado de la entrega
 
-PHP 8.3+ con `pdo_pgsql`, Composer y Docker Compose. En este equipo se encontró PHP 8.5.0, Composer 2.8.12 y Laravel Installer 5.32.0 instalados por Herd Lite en `~/.config/herd-lite/bin`; se añadieron accesos en `~/.local/bin`.
+- Laravel 13.37.0 con dependencias fijadas en `composer.lock`; PHP 8.3+ como mínimo de resolución, ejecución comprobada en PHP 8.5.0.
+- PostgreSQL 17 mediante Docker Compose, diez tablas de negocio, vista de saldos y dos migraciones.
+- Diez modelos Eloquent, diez Form Requests, diez factories y dos seeders.
+- Demo con 300 puestos y 280 comerciantes; pruebas de integración con PostgreSQL real.
+- Sin autenticación, controladores ni vistas de negocio. Única ruta HTTP propia: salud `/up`.
+
+El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) está conectado como `origin` por SSH y sigue vacío. **No se ha hecho push.** Hasta autorizar el primer envío, el equipo necesita recibir la copia local para acceder a los archivos.
+
+## Inicio local
+
+Con PHP, Composer, Docker y Bash disponibles, desde una copia nueva del proyecto:
 
 ```bash
-cd /home/CarlosQE/dev/personal/mercado-rodriguez
+cd /ruta/al/mercado-rodriguez
 ./scripts/setup --demo
 ./scripts/serve
 ```
 
-`setup` instala dependencias, prepara `.env` si no existe, genera la clave de aplicación, inicia PostgreSQL 17 y ejecuta las migraciones. `--demo` añade los datos de prueba y sólo debe usarse sobre las tablas del demo vacías. Para volver a preparar un entorno ya sembrado, ejecutar `./scripts/setup` sin ese argumento.
+Abrir `http://127.0.0.1:8000/up`; se espera HTTP 200. La raíz `/` devuelve 404 porque no existe interfaz. PostgreSQL queda publicado en `127.0.0.1:5433`.
 
-El archivo `.env` local ya está preparado con una clave y contraseña aleatorias; no se versiona. PostgreSQL escucha sólo en `127.0.0.1:5433` y conserva sus datos en un volumen. `docker compose stop` detiene la base sin borrarla. El usuario de PostgreSQL del contenedor tiene privilegios de administración para desarrollo; no reutilizar esa configuración en producción.
+Para preparar de nuevo un entorno ya sembrado, usar `./scripts/setup` sin `--demo`. El seeder completo rechaza datos existentes; no borra ni actualiza el demo. Los detalles de requisitos, credenciales, instalación manual y diagnóstico están en [instalación](docs/instalacion.md).
 
-La ruta `http://127.0.0.1:8000/up` comprueba el arranque HTTP de Laravel. No verifica la conexión a la base de datos. La raíz `/` devuelve 404 porque esta sesión no implementa interfaz ni rutas de negocio.
+## Documentación disponible
 
-Para usar un PostgreSQL existente, configurar `.env`, ejecutar `composer install`, `php artisan key:generate` sólo si falta la clave, y `php artisan migrate --seed`; no ejecutar `setup`, que inicia el contenedor local. La migración instala `btree_gist`: si el usuario no tiene permisos, debe prepararla un administrador.
-
-La migración ejecuta el esquema SQL versionado dentro de la transacción de PostgreSQL. No modificar ese archivo después de aplicar la migración: los cambios posteriores requieren nuevas migraciones.
-
-## Alcance
-
-10 modelos Eloquent, 10 Form Requests, 10 factories, migración con restricciones, seeders de demostración, vista de saldos y documentación ER. No incluye emisión mensual ejecutable, transferencias transaccionales como caso de uso, envío de alertas, autenticación ni interfaz; se han diseñado los datos que esas operaciones necesitarán. No se añaden capas de repositorios o servicios vacíos.
-
-Para emitir una obligación se envían asignación, tarifa, período y fechas: la base obtiene superficie y precio. Para consultar mora:
-
-```sql
-SELECT * FROM saldos_obligaciones
-WHERE fecha_vencimiento < CURRENT_DATE AND saldo > 0;
-```
+| Documento | Contenido |
+|---|---|
+| [Arquitectura](docs/arquitectura.md) | Estructura, relaciones Eloquent y responsabilidades |
+| [Diagrama ER](docs/entidad-relacion.md) | Entidades, cardinalidades y decisiones de negocio |
+| [Diccionario de datos](docs/diccionario-datos.md) | Columnas, claves, índices, restricciones y triggers |
+| [Validaciones](docs/validaciones.md) | Contratos de los Requests y campos reservados |
+| [Demo y factories](docs/datos-demo.md) | Distribución, fechas, tarifas y generación de escenarios |
+| [Pruebas](docs/verificacion.md) | Ejecución, resultados y cobertura pendiente |
+| [Continuidad](docs/continuidad.md) | Próximas tareas, reglas a confirmar y colaboración Git |
 
 ## Verificación
 
-Ejecutado el 17 de octubre de 2026 con PHP 8.5.0, Laravel 13.37.0 y PostgreSQL 17:
-
-- Dependencias instaladas y fijadas en `composer.lock`; resolución configurada para PHP 8.3 como versión mínima. La ejecución comprobada fue con PHP 8.5.
-- Migraciones y seeder ejecutados: 300 puestos, 280 comerciantes, 1.560 obligaciones, 1.300 pagos, 520 inspecciones y 100 hallazgos.
-- Validación de cantidades y coherencia mediante `tests/sql/demo_assertions.sql`.
-- Pruebas de integración reales: migración/rollback, restricciones, transferencias, estados, inspecciones, pagos/anulaciones, Form Requests y pagos simultáneos.
-- `/up` respondió HTTP 200; `/` respondió 404 como corresponde al alcance actual.
-- `composer validate --strict` y `composer check-platform-reqs` correctos. Composer no reportó avisos de vulnerabilidades en la actualización de dependencias.
-
-Para repetir las pruebas con PostgreSQL iniciado:
+Con PostgreSQL iniciado:
 
 ```bash
+composer validate --strict
+composer check-platform-reqs
 composer test
 docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1' < tests/sql/demo_assertions.sql
 ```
 
-`composer test` crea y elimina un esquema temporal aislado en la base configurada; necesita permiso CREATE SCHEMA. No borra ni vuelve a sembrar los datos de demostración. Usa procesos PHP separados para verificar el bloqueo de pagos concurrentes. El script SQL comprueba la siembra de demostración sin modificar filas. Los escenarios complementarios se describen en [verificación](docs/verificacion.md).
+Las pruebas de integración crean y eliminan un esquema temporal aislado; necesitan permiso CREATE SCHEMA y ejecución de procesos PHP. Las comprobaciones SQL de la siembra sólo leen datos. Ambas suites pasaron el 17/10/2026; se verificaron también `/up` y los pagos simultáneos. Véase la [cobertura detallada](docs/verificacion.md).
 
-Referencias oficiales: [Laravel 13](https://laravel.com/docs/13.x), [Form Requests](https://laravel.com/docs/13.x/validation#form-request-validation).
-
-## Datos de demostración
-
-`php artisan migrate --seed` crea cuatro secciones, **300 puestos y 280 comerciantes ficticios** con nombres habituales, teléfonos móviles y direcciones de La Paz. Los datos no provienen de personas reales.
-
-- 260 titulares actuales y 20 titulares anteriores; 20 transferencias.
-- 40 puestos libres, 250 ocupados y 10 clausurados con titular vigente.
-- Ocho versiones de tarifas y 1.560 obligaciones de seis meses, incluido el actual.
-- Pagos completos, pagos parciales y obligaciones pendientes; recibos únicos.
-- 520 inspecciones, próximas fechas vigentes y vencidas, hallazgos abiertos y subsanados.
-
-El seeder usa semilla aleatoria fija y fechas relativas a la ejecución; se ejecuta en una transacción. Rechaza una base con puestos, comerciantes o tarifas para evitar duplicaciones y mezclas. Para cargar únicamente las secciones, extraer ese catálogo en un seeder propio antes de un despliegue real; el seeder predeterminado es exclusivamente de demostración.
-
-Las factories permiten construir escenarios pequeños, por ejemplo `Comerciante::factory()->count(5)->create()`. Al sobrescribir IDs relacionados, suministrar referencias compatibles con las fechas y sección; las restricciones SQL siguen activas. `Obligacion::factory()->create()->refresh()` recupera los valores calculados por PostgreSQL.
-
-Después de sembrar, ejecutar `psql` con las credenciales de la base de pruebas y `-v ON_ERROR_STOP=1 -f tests/sql/demo_assertions.sql` para comprobar cantidades y coherencia. El script fue ejecutado correctamente.
-
-## Historial Git
-
-Repositorio local inicializado en la rama `main`; sin remoto por ahora. `.env`, credenciales de Composer, dependencias y archivos temporales están excluidos. `composer.lock` está versionado para fijar las versiones utilizadas.
+`.env`, dependencias y credenciales no se versionan. El usuario de la base de Compose es de desarrollo. No hay procedimiento de producción definido ni licencia de distribución acordada; Composer declara `proprietary`.
