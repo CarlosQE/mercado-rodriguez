@@ -17,10 +17,16 @@ Composer tiene `config.platform.php = 8.3.0` para resolver dependencias compatib
 
 ## Primera preparación
 
-Obtener la copia local del proyecto. El remoto público aún no contiene código; no se puede clonar esta entrega hasta su primer push autorizado. Abrir la carpeta desde Ubuntu/WSL o Linux:
+Clonar el repositorio público desde Ubuntu/WSL o Linux:
 
 ```bash
-cd /ruta/al/mercado-rodriguez
+git clone https://github.com/CarlosQE/mercado-rodriguez.git
+cd mercado-rodriguez
+```
+
+Desde la carpeta del proyecto, comprobar las herramientas y preparar el entorno:
+
+```bash
 php --version
 composer --version
 docker info

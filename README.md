@@ -12,7 +12,7 @@ Base Laravel para gestionar los alquileres de un mercado municipal ficticio. Est
 - Demo con 300 puestos y 280 comerciantes; pruebas de integración con PostgreSQL real.
 - Sin autenticación, controladores ni vistas de negocio. Única ruta HTTP propia: salud `/up`.
 
-El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) está conectado como `origin` por SSH y sigue vacío. **No se ha hecho push.** Hasta autorizar el primer envío, el equipo necesita recibir la copia local para acceder a los archivos.
+El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) contiene el código y la documentación del proyecto en la rama `main`. El remoto local `origin` utiliza SSH.
 
 ## Inicio local
 

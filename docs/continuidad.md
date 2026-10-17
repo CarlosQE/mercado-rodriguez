@@ -57,7 +57,7 @@ Los supuestos están reflejados en el diseño; no deben presentarse como reglas 
 
 ## Flujo Git actual
 
-`origin` apunta a `git@github.com:CarlosQE/mercado-rodriguez.git`; el repositorio remoto es público y sigue vacío. Hay commits locales en `main`. **No ejecutar push hasta autorización explícita del responsable.** No crear README, licencia o commits desde GitHub mientras se prepara el primer envío: generaría otro historial que habría que conciliar.
+`origin` apunta a `git@github.com:CarlosQE/mercado-rodriguez.git`; el repositorio remoto es público y la entrega inicial se publica en `main` con autorización del responsable. Los commits describen los cambios en español. Coordinar las siguientes publicaciones y revisiones con el equipo; conservar el historial y evitar reescrituras forzadas.
 
 Comandos locales de trabajo:
 

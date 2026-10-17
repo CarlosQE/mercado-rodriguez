@@ -23,6 +23,6 @@ El historial monetario pertenece a las asignaciones originales, aunque cambie el
 
 ## Estado del repositorio
 
-El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) está conectado como `origin` mediante SSH. **No se ha realizado ningún push**. Mientras siga vacío, el código y estos documentos están disponibles sólo en la copia local que se entregue al equipo. Las instrucciones de clonación serán aplicables después de la publicación autorizada.
+El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) contiene esta entrega en `main` y está conectado como `origin` mediante SSH. Los miembros del equipo pueden clonar el código y seguir la guía de instalación.
 
 La documentación describe el código existente. Los ejemplos de integración y la secuencia de tareas son propuestas para el trabajo siguiente, no funcionalidades entregadas.
