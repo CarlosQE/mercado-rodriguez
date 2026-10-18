@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comerciante extends Model
@@ -12,7 +11,7 @@ class Comerciante extends Model
     use HasFactory;
 
     protected $table = 'comerciantes';
-    protected $fillable = ['tipo_documento', 'documento', 'nombres', 'apellidos', 'telefono', 'email', 'direccion', 'activo'];
+    protected $fillable = ['documento', 'nombres', 'apellidos', 'rubro', 'telefono', 'email', 'direccion', 'activo'];
     protected function casts(): array
     {
         return ['activo' => 'boolean'];
@@ -21,5 +20,10 @@ class Comerciante extends Model
     public function asignaciones(): HasMany
     {
         return $this->hasMany(Asignacion::class, 'comerciante_id');
+    }
+
+    public function pagos(): HasMany
+    {
+        return $this->hasMany(Pago::class, 'comerciante_id');
     }
 }

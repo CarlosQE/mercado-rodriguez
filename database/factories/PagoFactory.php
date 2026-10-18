@@ -2,7 +2,7 @@
 namespace Database\Factories;
 use App\Models\Pago;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Obligacion;
+use App\Models\Comerciante;
 /** @extends Factory<Pago> */
 class PagoFactory extends Factory
 {
@@ -10,10 +10,11 @@ class PagoFactory extends Factory
     public function definition(): array
     {
         return [
-            'obligacion_id' => Obligacion::factory(),
-            'recibo' => 'REC-'.fake()->unique()->numerify('##########'), 'fecha_pago' => today(),
-            'importe' => fn (array $attributes) => Obligacion::findOrFail($attributes['obligacion_id'])->importe,
-            'metodo' => 'efectivo', 'referencia' => null,
+            'comerciante_id' => Comerciante::inRandomOrder()->value('id') ?? Comerciante::factory(),
+            'comprobante' => 'REC-'.fake()->unique()->numerify('##########'),
+            'fecha_pago' => today(),
+            'metodo' => fake()->randomElement(['efectivo', 'transferencia']),
+            'total' => 0,
         ];
     }
 }

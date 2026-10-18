@@ -32,9 +32,4 @@ class Asignacion extends Model
     {
         return $this->hasMany(Obligacion::class, 'asignacion_id');
     }
-
-    public function inspecciones(): HasMany
-    {
-        return $this->hasMany(Inspeccion::class, 'asignacion_id');
-    }
 }
