@@ -10,7 +10,6 @@ class SaveSeccionRequest extends MarketRequest
     {
         return [
             'nombre' => ['required', 'string', 'max:80', Rule::unique('secciones')->ignore($this->route('seccion'))],
-            'intervalo_inspeccion_dias' => ['required', 'integer', 'min:1', 'max:3650'],
-        ];
+            'tarifa_m2' => ['required', 'numeric', 'min:0.01', 'max:9999.99'],        ];
     }
 }
