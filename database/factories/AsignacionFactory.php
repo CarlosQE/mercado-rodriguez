@@ -10,6 +10,12 @@ class AsignacionFactory extends Factory
     protected $model = Asignacion::class;
     public function definition(): array
     {
-        return ['puesto_id' => Puesto::factory(), 'comerciante_id' => Comerciante::factory(), 'fecha_inicio' => today()->startOfMonth()->subMonths(5), 'fecha_fin' => null, 'motivo' => 'Adjudicación municipal de uso del puesto'];
+        return [
+            'puesto_id' => Puesto::inRandomOrder()->value('id') ?? Puesto::factory(),
+            'comerciante_id' => Comerciante::inRandomOrder()->value('id') ?? Comerciante::factory(),
+            'fecha_inicio' => today()->startOfMonth()->subMonths(5),
+            'fecha_fin' => null,
+            'motivo' => 'Adjudicación municipal de uso del puesto',
+        ];
     }
 }

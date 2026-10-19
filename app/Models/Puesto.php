@@ -12,7 +12,7 @@ class Puesto extends Model
     use HasFactory;
 
     protected $table = 'puestos';
-    protected $fillable = ['seccion_id', 'codigo', 'superficie_m2'];
+    protected $fillable = ['seccion_id', 'codigo', 'superficie_m2', 'estado'];
     protected function casts(): array
     {
         return ['superficie_m2' => 'decimal:2'];
@@ -26,24 +26,5 @@ class Puesto extends Model
     public function asignaciones(): HasMany
     {
         return $this->hasMany(Asignacion::class, 'puesto_id');
-    }
-
-    public function clausuras(): HasMany
-    {
-        return $this->hasMany(Clausura::class, 'puesto_id');
-    }
-
-    public function estadoEn(string $fecha): string
-    {
-        if ($this->clausuras()->where('fecha_inicio', '<=', $fecha)->where(fn ($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>', $fecha))->exists()) {
-            return 'clausurado';
-        }
-        return $this->asignaciones()->where('fecha_inicio', '<=', $fecha)->where(fn ($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>', $fecha))->exists() ? 'ocupado' : 'libre';
-    }
-
-    public function ultimaInspeccion(): ?Inspeccion
-    {
-        return Inspeccion::whereHas('asignacion', fn ($q) => $q->where('puesto_id', $this->id))
-            ->orderByDesc('fecha')->orderByDesc('id')->first();
     }
 }

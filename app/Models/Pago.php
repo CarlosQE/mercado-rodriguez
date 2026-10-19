@@ -5,21 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Pago extends Model
 {
     use HasFactory;
 
     protected $table = 'pagos';
-    protected $fillable = ['obligacion_id', 'recibo', 'fecha_pago', 'importe', 'metodo', 'referencia'];
+    protected $fillable = ['comerciante_id', 'comprobante', 'fecha_pago', 'metodo', 'total'];
     protected function casts(): array
     {
-        return ['fecha_pago' => 'date', 'importe' => 'decimal:2', 'anulado_en' => 'datetime'];
+        return ['fecha_pago' => 'date', 'total' => 'decimal:2'];
     }
 
-    public function obligacion(): BelongsTo
+    public function comerciante(): BelongsTo
     {
-        return $this->belongsTo(Obligacion::class, 'obligacion_id');
+        return $this->belongsTo(Comerciante::class, 'comerciante_id');
+    }
+
+    public function obligaciones(): BelongsToMany
+    {
+        return $this->belongsToMany(Obligacion::class, 'pago_obligacion', 'pago_id', 'obligacion_id')
+            ->withPivot('monto')
+            ->withTimestamps();
     }
 }

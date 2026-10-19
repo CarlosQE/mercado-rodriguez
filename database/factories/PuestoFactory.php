@@ -9,6 +9,11 @@ class PuestoFactory extends Factory
     protected $model = Puesto::class;
     public function definition(): array
     {
-        return ['seccion_id' => Seccion::factory(), 'codigo' => 'P-'.fake()->unique()->numerify('######'), 'superficie_m2' => fake()->randomElement(['4.00', '6.00', '8.00', '10.50', '12.00'])];
+        return [
+            'seccion_id' => Seccion::inRandomOrder()->value('id') ?? Seccion::factory(),
+            'codigo' => 'P-'.fake()->unique()->numerify('######'),
+            'superficie_m2' => fake()->randomElement(['4.00', '6.00', '8.00', '10.50', '12.00']),
+            'estado' => 'libre',
+        ];
     }
 }

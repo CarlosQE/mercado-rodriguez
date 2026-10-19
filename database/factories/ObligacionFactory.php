@@ -3,7 +3,6 @@ namespace Database\Factories;
 use App\Models\Obligacion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Asignacion;
-use App\Models\Tarifa;
 /** @extends Factory<Obligacion> */
 class ObligacionFactory extends Factory
 {
@@ -11,13 +10,13 @@ class ObligacionFactory extends Factory
     public function definition(): array
     {
         return [
-            'asignacion_id' => Asignacion::factory(),
-            'tarifa_id' => function (array $attributes) {
-                $asignacion = Asignacion::findOrFail($attributes['asignacion_id']);
-                return Tarifa::factory()->create(['seccion_id' => $asignacion->puesto->seccion_id])->id;
-            },
-            'periodo' => today()->startOfMonth(), 'fecha_emision' => today()->startOfMonth(),
+            'asignacion_id' => Asignacion::inRandomOrder()->value('id') ?? Asignacion::factory(),
+            'periodo' => today()->startOfMonth(),
             'fecha_vencimiento' => today()->startOfMonth()->addDays(9),
+            'superficie_m2' => fn (array $attributes) => Asignacion::findOrFail($attributes['asignacion_id'])->puesto->superficie_m2,
+            'tarifa_m2' => fn (array $attributes) => Asignacion::findOrFail($attributes['asignacion_id'])->puesto->seccion->tarifa_m2,
+            'importe' => fn (array $attributes) => round($attributes['superficie_m2'] * $attributes['tarifa_m2'], 2),
+            'estado' => 'pendiente',
         ];
     }
 }
