@@ -9,14 +9,16 @@
         <div class="aviso aviso-error">{{ $errors->first() }}</div>
     @endif
 
-    <div class="herramientas">
-        <form method="POST" action="{{ route('obligaciones.emitir') }}" class="filtros">
-            @csrf
-            <input type="text" name="periodo" value="{{ old('periodo', now()->format('Y-m')) }}" placeholder="AAAA-MM" pattern="\d{4}-\d{2}" class="input" style="width:120px">
-            <input type="date" name="fecha_vencimiento" value="{{ old('fecha_vencimiento') }}" class="input" title="Vencimiento (vacío = día 10)">
-            <button class="btn">Emitir período</button>
-        </form>
-    </div>
+    @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+        <div class="herramientas">
+            <form method="POST" action="{{ route('obligaciones.emitir') }}" class="filtros">
+                @csrf
+                <input type="text" name="periodo" value="{{ old('periodo', now()->format('Y-m')) }}" placeholder="AAAA-MM" pattern="\d{4}-\d{2}" class="input" style="width:120px">
+                <input type="date" name="fecha_vencimiento" value="{{ old('fecha_vencimiento') }}" class="input" title="Vencimiento (vacío = día 10)">
+                <button class="btn">Emitir período</button>
+            </form>
+        </div>
+    @endif
 
     <div class="herramientas">
         <form method="GET" class="filtros">

@@ -10,7 +10,9 @@
             <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar sección" class="input">
             <button class="btn btn-ghost">Buscar</button>
         </form>
-        <a href="{{ route('secciones.create') }}" class="btn">Nueva sección</a>
+        @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+            <a href="{{ route('secciones.create') }}" class="btn">Nueva sección</a>
+        @endif
     </div>
 
     <div class="artefacto">
@@ -30,14 +32,16 @@
                         <td>Bs {{ number_format($seccion->tarifa_m2, 2) }}</td>
                         <td>{{ $seccion->puestos_count }}</td>
                         <td>
-                            <div class="acciones">
-                                <a href="{{ route('secciones.edit', $seccion) }}" class="btn btn-ghost btn-sm">Editar</a>
-                                <form method="POST" action="{{ route('secciones.destroy', $seccion) }}" onsubmit="return confirm('¿Eliminar la sección?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-ghost btn-sm">Eliminar</button>
-                                </form>
-                            </div>
+                            @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                                <div class="acciones">
+                                    <a href="{{ route('secciones.edit', $seccion) }}" class="btn btn-ghost btn-sm">Editar</a>
+                                    <form method="POST" action="{{ route('secciones.destroy', $seccion) }}" onsubmit="return confirm('¿Eliminar la sección?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-ghost btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                            @endif
                         </td>
                     </tr>
                 @empty
