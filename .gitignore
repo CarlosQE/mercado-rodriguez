@@ -4,6 +4,8 @@
 /bootstrap/cache/*
 !/bootstrap/cache/.gitignore
 /storage/**/*.log
+/storage/framework/testing/
+/public/storage
 /.env.*
 !/.env.example
 /.phpunit.result.cache

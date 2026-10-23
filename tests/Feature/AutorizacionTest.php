@@ -22,7 +22,7 @@ class AutorizacionTest extends TestCase
     {
         $this->actingAs($this->usuario(User::ROL_COBRADOR));
 
-        foreach (['secciones.index', 'puestos.index', 'comerciantes.index', 'asignaciones.index', 'obligaciones.index', 'pagos.index'] as $ruta) {
+        foreach (['secciones.index', 'puestos.index', 'comerciantes.index', 'asignaciones.index', 'obligaciones.index', 'pagos.index', 'pagos.create'] as $ruta) {
             $this->get(route($ruta))->assertOk();
         }
 

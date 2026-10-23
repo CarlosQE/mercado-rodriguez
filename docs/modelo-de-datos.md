@@ -1,6 +1,6 @@
 # Modelo de datos
 
-PostgreSQL, 7 tablas. Todas tienen `id` bigint autoincremental, `created_at` y `updated_at`.
+PostgreSQL, 10 tablas. Todas tienen `id` bigint autoincremental, `created_at` y `updated_at`.
 
 ```mermaid
 erDiagram
@@ -79,6 +79,41 @@ erDiagram
 
 Único: `(pago_id, obligacion_id)`.
 
+### users
+| Columna | Tipo | Notas |
+|---|---|---|
+| name | varchar(255) | Nombre visible en la barra superior |
+| email | varchar(255) | Único; se usa para iniciar sesión |
+| email_verified_at | timestamp | Nulo |
+| password | varchar(255) | Hash de la contraseña |
+| remember_token | varchar(100) | Nulo |
+| rol | varchar(20) | `admin` o `cobrador`; por defecto `cobrador` |
+
+### datos_mercado
+| Columna | Tipo | Notas |
+|---|---|---|
+| nombre | varchar(120) | Nombre del mercado |
+| eslogan | varchar(180) | Opcional |
+| historia | text | Párrafos separados por una línea en blanco |
+| direccion | varchar(255) | Dirección ficticia de La Paz |
+| referencia | varchar(255) | Opcional |
+| latitud, longitud | decimal(10,7) | Coordenadas referenciales para el mapa |
+| horario_atencion | varchar(180) | |
+| telefono | varchar(30) | |
+| email | varchar(255) | Opcional |
+
+La aplicación mantiene una sola fila; el formulario de administración actualiza esa ficha.
+
+### fotos_mercado
+| Columna | Tipo | Notas |
+|---|---|---|
+| titulo | varchar(120) | |
+| descripcion | varchar(255) | Opcional |
+| ruta | varchar(255) | `img/mercado/...` para relleno o `mercado/...` para subidas |
+| orden | integer | Por defecto 0; menor primero |
+
+El accesorio `url` devuelve `asset(ruta)` para las imágenes de relleno y `asset('storage/' . ruta)` para las subidas.
+
 ## Integridad referencial
 
 - Todas las claves foráneas usan `ON UPDATE CASCADE` y `ON DELETE RESTRICT`, salvo `pago_obligacion.pago_id`, que usa `ON DELETE CASCADE`.
@@ -94,3 +129,7 @@ erDiagram
 | Asignacion | `puesto()`, `comerciante()`, `obligaciones()` |
 | Obligacion | `asignacion()`, `pagos()` |
 | Pago | `comerciante()`, `obligaciones()` |
+| Puesto | Además `asignacionVigente()` (asignación sin fecha de fin) |
+| User | Sin relaciones; expone constantes `ROL_ADMIN`, `ROL_COBRADOR` y `tieneRol(...)` |
+| DatoMercado | Sin relaciones (una sola fila) |
+| FotoMercado | Sin relaciones; accesorio `url` y ayuda `esDeRelleno()` |

@@ -37,7 +37,7 @@ docker compose version
 
 `setup --demo` hace, en orden: crear `.env` si falta, generar una contraseña local aleatoria en ese archivo nuevo, instalar Composer, generar `APP_KEY` si está vacía, iniciar PostgreSQL, aplicar migraciones y sembrar el demo. Si falla un paso, el script se detiene; revisar el error antes de repetirlo. El catálogo de secciones se inserta fuera de la transacción del demo; si la siembra falla, esas cuatro secciones pueden permanecer.
 
-Abrir `http://127.0.0.1:8000/up`: se espera HTTP 200. La ruta `/` devuelve 404. No existen login, panel ni API de negocio. `/up` no comprueba PostgreSQL; usar además `php artisan migrate:status` y las pruebas.
+Abrir `http://127.0.0.1:8000/up`: se espera HTTP 200. La portada pública está en `/` y el login en `/login`; los usuarios demo se detallan en el README. `/up` no comprueba PostgreSQL; usar además `php artisan migrate:status` y las pruebas. Para mostrar las fotos subidas desde `/admin/fotos`, ejecutar una vez `php artisan storage:link`.
 
 Para un entorno ya sembrado usar `./scripts/setup` sin `--demo`. Volver a ejecutar la siembra completa sobre puestos/comerciantes/tarifas existentes se rechaza por diseño.
 
@@ -53,7 +53,7 @@ Para un entorno ya sembrado usar `./scripts/setup` sin `--demo`. Volver a ejecut
 | `DB_HOST` | `127.0.0.1` para PHP ejecutado en el host |
 | `DB_PORT` | `5433` en `.env.example`; PostgreSQL interno usa `5432` |
 | `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Base y credenciales locales; Compose también las utiliza |
-| `CACHE_STORE`, `SESSION_DRIVER`, `QUEUE_CONNECTION` | Valores de ejemplo; todavía no hay un módulo configurado de sesiones, cache persistente o trabajos |
+| `CACHE_STORE`, `SESSION_DRIVER`, `QUEUE_CONNECTION` | `SESSION_DRIVER=file` guarda la sesión del login en `storage/framework/sessions`; no hay cache persistente ni trabajos en cola |
 
 Si se copia `.env.example` manualmente, `DB_PASSWORD` queda vacío: asignar una contraseña antes de iniciar Compose. El script sólo genera la contraseña al crear un `.env` nuevo; no sobrescribe archivos existentes. No compartir `.env` ni copiar la clave de otra instalación.
 
