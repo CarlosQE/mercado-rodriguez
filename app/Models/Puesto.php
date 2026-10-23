@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Puesto extends Model
 {
@@ -26,5 +27,10 @@ class Puesto extends Model
     public function asignaciones(): HasMany
     {
         return $this->hasMany(Asignacion::class, 'puesto_id');
+    }
+
+    public function asignacionVigente(): HasOne
+    {
+        return $this->hasOne(Asignacion::class, 'puesto_id')->whereNull('fecha_fin');
     }
 }

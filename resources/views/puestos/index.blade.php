@@ -46,16 +46,17 @@
                         <td>{{ number_format($puesto->superficie_m2, 2) }} m²</td>
                         <td><span class="etiqueta-estado {{ $puesto->estado }}">{{ ucfirst($puesto->estado) }}</span></td>
                         <td>
-                            @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
-                                <div class="acciones">
+                            <div class="acciones">
+                                <a href="{{ route('puestos.show', $puesto) }}" class="btn btn-ghost btn-sm">Ver</a>
+                                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
                                     <a href="{{ route('puestos.edit', $puesto) }}" class="btn btn-ghost btn-sm">Editar</a>
                                     <form method="POST" action="{{ route('puestos.destroy', $puesto) }}" onsubmit="return confirm('¿Eliminar el puesto?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-ghost btn-sm">Eliminar</button>
                                     </form>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty

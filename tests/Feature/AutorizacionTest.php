@@ -83,6 +83,6 @@ class AutorizacionTest extends TestCase
         $this->post(route('login.store'), [
             'email' => $cobrador->email,
             'password' => 'password',
-        ])->assertRedirect(route('puestos.index'));
+        ])->assertRedirect(route('mapa.index'));
     }
 }

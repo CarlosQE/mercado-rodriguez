@@ -30,7 +30,7 @@ class LoginController extends Controller
 
         $destino = $request->user()->tieneRol(User::ROL_ADMIN)
             ? route('dashboard')
-            : route('puestos.index');
+            : route('mapa.index');
 
         return redirect()->intended($destino);
     }

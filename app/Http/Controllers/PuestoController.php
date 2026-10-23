@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SavePuestoRequest;
+use App\Models\Obligacion;
 use App\Models\Puesto;
 use App\Models\Seccion;
 use Illuminate\Http\Request;
@@ -22,6 +23,23 @@ class PuestoController extends Controller
         $secciones = Seccion::orderBy('nombre')->get(['id', 'nombre']);
 
         return view('puestos.index', compact('puestos', 'secciones'));
+    }
+
+    public function show(Puesto $puesto)
+    {
+        $puesto->load([
+            'seccion',
+            'asignacionVigente.comerciante',
+            'asignaciones' => fn ($q) => $q->with('comerciante')->orderByDesc('fecha_inicio'),
+        ]);
+
+        $obligaciones = Obligacion::with('asignacion.comerciante')
+            ->whereHas('asignacion', fn ($q) => $q->where('puesto_id', $puesto->id))
+            ->orderByDesc('periodo')
+            ->limit(10)
+            ->get();
+
+        return view('puestos.show', compact('puesto', 'obligaciones'));
     }
 
     public function libres(Request $request)

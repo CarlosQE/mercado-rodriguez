@@ -7,6 +7,7 @@ use App\Http\Controllers\DatoMercadoController;
 use App\Http\Controllers\FotoMercadoController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MapaController;
 use App\Http\Controllers\ObligacionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PuestoController;
@@ -24,10 +25,11 @@ Route::middleware('guest')->group(function () {
 Route::post('logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
 Route::middleware(['auth', 'rol:admin,cobrador'])->group(function () {
+    Route::get('mapa', [MapaController::class, 'index'])->name('mapa.index');
     Route::resource('secciones', SeccionController::class)
         ->only(['index'])
         ->parameters(['secciones' => 'seccion']);
-    Route::resource('puestos', PuestoController::class)->only(['index'])->whereNumber('puesto');
+    Route::resource('puestos', PuestoController::class)->only(['index', 'show'])->whereNumber('puesto');
     Route::resource('comerciantes', ComercianteController::class)->only(['index']);
     Route::resource('asignaciones', AsignacionController::class)
         ->only(['index'])

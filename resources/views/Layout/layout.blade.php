@@ -76,6 +76,7 @@
             <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
             @auth
                 @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN, \App\Models\User::ROL_COBRADOR))
+                    <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
                     <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
                     <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
                     <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
