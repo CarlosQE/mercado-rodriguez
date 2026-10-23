@@ -18,7 +18,6 @@
         .galeria figure { margin: 0; }
         .galeria img { width: 100%; height: 210px; object-fit: cover; border-radius: 20px; display: block; }
         .galeria figcaption { font-size: 15px; color: var(--slate); margin-top: 8px; }
-        .mapa { width: 100%; height: 380px; border: 0; border-radius: 24px; }
     </style>
 @endpush
 
@@ -32,10 +31,56 @@
 
     @if ($dato)
         <section class="bloque" style="margin-top: 0">
-            <h2 class="serif">Nuestra historia</h2>
-            <div class="prosa">
-                @foreach (preg_split('/\r?\n\r?\n/', trim($dato->historia)) as $parrafo)
-                    <p>{{ $parrafo }}</p>
+            <div class="historia-grid">
+                <div>
+                    <h2 class="serif">Nuestra historia</h2>
+                    <div class="prosa">
+                        @foreach (preg_split('/\r?\n\r?\n/', trim($dato->historia)) as $parrafo)
+                            <p>{{ $parrafo }}</p>
+                        @endforeach
+                    </div>
+                </div>
+
+                @php $fotoHistoria = $fotos->first(); @endphp
+                <figure class="historia-imagen">
+                    @if ($fotoHistoria)
+                        <img src="{{ $fotoHistoria->url }}" alt="{{ $fotoHistoria->titulo }}" loading="lazy">
+                    @else
+                        <div class="historia-placeholder">Próximamente: foto del mercado</div>
+                    @endif
+                </figure>
+            </div>
+        </section>
+    @endif
+
+    @if ($comunicados->isNotEmpty())
+        <section class="bloque">
+            <div class="bloque-encabezado">
+                <h2 class="serif">Comunicados</h2>
+                <a href="{{ route('tablero') }}" class="btn btn-ghost btn-sm">Ver tablero completo</a>
+            </div>
+
+            <div class="comunicados-grid">
+                @foreach ($comunicados as $comunicado)
+                    <article class="comunicado">
+                        @if ($comunicado->fijado)
+                            <span class="comunicado-pin" title="Aviso fijado">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"></path>
+                                    <circle cx="12" cy="10" r="2.5"></circle>
+                                </svg>
+                                Fijado
+                            </span>
+                        @endif
+
+                        <div class="comunicado-meta">
+                            <span class="etiqueta-comunicado {{ $comunicado->tipo }}">{{ ucfirst($comunicado->tipo) }}</span>
+                            <time datetime="{{ $comunicado->fecha_publicacion->toDateString() }}">{{ $comunicado->fecha_publicacion->translatedFormat('d M Y') }}</time>
+                        </div>
+
+                        <h3 class="serif">{{ $comunicado->titulo }}</h3>
+                        <p class="comunicado-contenido">{!! nl2br(e($comunicado->contenido)) !!}</p>
+                    </article>
                 @endforeach
             </div>
         </section>
@@ -77,17 +122,18 @@
             </div>
 
             @php
-                $lat = (float) $dato->latitud;
-                $lon = (float) $dato->longitud;
-                $latTexto = number_format($lat, 6, '.', '');
-                $lonTexto = number_format($lon, 6, '.', '');
-                $bbox = number_format($lon - 0.01, 6, '.', '') . ',' . number_format($lat - 0.01, 6, '.', '') . ',' . number_format($lon + 0.01, 6, '.', '') . ',' . number_format($lat + 0.01, 6, '.', '');
+                $latTexto = number_format((float) $dato->latitud, 6, '.', '');
+                $lonTexto = number_format((float) $dato->longitud, 6, '.', '');
             @endphp
             <iframe
                 class="mapa"
-                src="https://www.openstreetmap.org/export/embed.html?bbox={{ $bbox }}&amp;layer=mapnik&amp;marker={{ $latTexto }},{{ $lonTexto }}"
-                title="Mapa referencial de la ubicación del mercado"
-                loading="lazy"></iframe>
+                src="https://www.google.com/maps?q={{ $latTexto }},{{ $lonTexto }}&amp;hl=es&amp;z=16&amp;output=embed"
+                width="100%"
+                height="380"
+                title="Ubicación del Mercado Rodríguez"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
         </section>
     @endif
 

@@ -53,6 +53,29 @@
         .aviso { border-radius: 16px; padding: 12px 20px; margin-bottom: 24px; background: var(--mist); }
         .aviso-error { background: var(--peach); color: var(--sienna); }
 
+        /* Portada y comunicados */
+        .historia-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: center; }
+        .historia-imagen { margin: 0; overflow: hidden; border-radius: 24px; }
+        .historia-imagen img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+        .historia-placeholder { aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 24px; background: var(--peach); color: var(--sienna); text-align: center; font-family: 'Source Serif 4', Georgia, serif; font-size: 22px; }
+        .bloque-encabezado { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+        .bloque-encabezado h2 { margin-bottom: 0; }
+        .comunicados-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .comunicado { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px; border-radius: 24px; background: var(--mist); }
+        .comunicado h3 { font-size: 22px; line-height: 1.2; padding-right: 72px; }
+        .comunicado-contenido { color: #33363b; }
+        .comunicado-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 14px; color: var(--slate); }
+        .etiqueta-comunicado { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; background: var(--peach); color: var(--sienna); font-size: 13px; line-height: 1.4; white-space: nowrap; }
+        .etiqueta-comunicado.urgente, .etiqueta-comunicado.cobranza { background: var(--sienna); color: #fff; }
+        .comunicado-pin { position: absolute; top: 20px; right: 20px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 9999px; background: var(--paper); color: var(--sienna); font-size: 12px; font-weight: 500; box-shadow: 0 0 0 1px rgba(93,42,26,.12); }
+        .comunicado-pin svg { width: 13px; height: 13px; }
+        .mapa { width: 100%; height: 380px; display: block; border: 1px solid var(--line); border-radius: 24px; }
+
+        @media (max-width: 800px) {
+            .historia-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+            .mapa { height: 280px; }
+        }
+
         /* Formularios */
         .campo { margin-bottom: 20px; }
         .etiqueta { display: block; font-size: 14px; color: var(--slate); margin-bottom: 6px; }
@@ -121,20 +144,20 @@
             box-shadow: 0 0 0 4px var(--peach);
         }
 
-        .indicador, .panel, .tarjeta-mercado, .ficha-puesto .card, .foto-card { transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease-out; }
-        .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover {
+        .indicador, .panel, .tarjeta-mercado, .ficha-puesto .card, .foto-card, .comunicado { transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease-out; }
+        .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .comunicado:hover {
             transform: translateY(-2px);
             box-shadow: 0 16px 28px -24px rgba(4,23,43,.35);
         }
 
-        .indicadores > .indicador, .seccion-mercado > .tarjeta-mercado, .ficha-puesto > .card, .foto-grid > .foto-card, .dos-columnas > .panel, .bloque-seccion {
+        .indicadores > .indicador, .seccion-mercado > .tarjeta-mercado, .ficha-puesto > .card, .foto-grid > .foto-card, .dos-columnas > .panel, .comunicados-grid > .comunicado, .bloque-seccion {
             animation: elemento-entrada 320ms cubic-bezier(.2,.8,.2,1) backwards;
         }
-        .indicadores > .indicador:nth-child(2), .seccion-mercado > .tarjeta-mercado:nth-child(2), .foto-grid > .foto-card:nth-child(2), .dos-columnas > .panel:nth-child(2), .bloque-seccion:nth-of-type(2) { animation-delay: 50ms; }
-        .indicadores > .indicador:nth-child(3), .seccion-mercado > .tarjeta-mercado:nth-child(3), .foto-grid > .foto-card:nth-child(3), .bloque-seccion:nth-of-type(3) { animation-delay: 100ms; }
-        .indicadores > .indicador:nth-child(4), .seccion-mercado > .tarjeta-mercado:nth-child(4), .foto-grid > .foto-card:nth-child(4), .bloque-seccion:nth-of-type(4) { animation-delay: 150ms; }
-        .indicadores > .indicador:nth-child(5), .foto-grid > .foto-card:nth-child(5), .bloque-seccion:nth-of-type(5) { animation-delay: 200ms; }
-        .indicadores > .indicador:nth-child(6), .foto-grid > .foto-card:nth-child(6), .bloque-seccion:nth-of-type(6) { animation-delay: 250ms; }
+        .indicadores > .indicador:nth-child(2), .seccion-mercado > .tarjeta-mercado:nth-child(2), .foto-grid > .foto-card:nth-child(2), .dos-columnas > .panel:nth-child(2), .comunicados-grid > .comunicado:nth-child(2), .bloque-seccion:nth-of-type(2) { animation-delay: 50ms; }
+        .indicadores > .indicador:nth-child(3), .seccion-mercado > .tarjeta-mercado:nth-child(3), .foto-grid > .foto-card:nth-child(3), .comunicados-grid > .comunicado:nth-child(3), .bloque-seccion:nth-of-type(3) { animation-delay: 100ms; }
+        .indicadores > .indicador:nth-child(4), .seccion-mercado > .tarjeta-mercado:nth-child(4), .foto-grid > .foto-card:nth-child(4), .comunicados-grid > .comunicado:nth-child(4), .bloque-seccion:nth-of-type(4) { animation-delay: 150ms; }
+        .indicadores > .indicador:nth-child(5), .foto-grid > .foto-card:nth-child(5), .comunicados-grid > .comunicado:nth-child(5), .bloque-seccion:nth-of-type(5) { animation-delay: 200ms; }
+        .indicadores > .indicador:nth-child(6), .foto-grid > .foto-card:nth-child(6), .comunicados-grid > .comunicado:nth-child(6), .bloque-seccion:nth-of-type(6) { animation-delay: 250ms; }
 
         .tabla tbody tr { animation: fila-entrada 280ms ease-out backwards; }
         .tabla tbody td { transition: background-color 180ms ease-out; }
@@ -152,8 +175,8 @@
         .galeria figure, .foto-card { overflow: hidden; }
         .galeria figure { border-radius: 20px; }
         .galeria figcaption { position: relative; background: var(--paper); }
-        .galeria img, .foto-card img { animation: imagen-entrada 400ms ease-out backwards; transition: transform 250ms cubic-bezier(.2,.8,.2,1); }
-        .galeria figure:hover img, .foto-card:hover img { transform: scale(1.03); }
+        .galeria img, .foto-card img, .historia-imagen img { animation: imagen-entrada 400ms ease-out backwards; transition: transform 250ms cubic-bezier(.2,.8,.2,1); }
+        .galeria figure:hover img, .foto-card:hover img, .historia-imagen:hover img { transform: scale(1.03); }
 
         .barra-ocupacion span { transform-origin: left center; animation: crecer-x 400ms cubic-bezier(.2,.8,.2,1) backwards; }
         .grafico .barra-mes { transform-origin: bottom center; animation: crecer-y 400ms cubic-bezier(.2,.8,.2,1) backwards; }
@@ -171,7 +194,7 @@
             @view-transition { navigation: none; }
             html { scroll-behavior: auto; }
             *, *::before, *::after { animation: none !important; transition: none !important; }
-            .btn:hover, .btn:active, .menu a:hover, .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .mapa-grid .puesto:hover, .mapa-grid .puesto:active, .galeria figure:hover img, .foto-card:hover img { transform: none; }
+            .btn:hover, .btn:active, .menu a:hover, .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .comunicado:hover, .mapa-grid .puesto:hover, .mapa-grid .puesto:active, .galeria figure:hover img, .foto-card:hover img, .historia-imagen:hover img { transform: none; }
             ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
         }
     </style>
@@ -183,6 +206,7 @@
         <nav class="menu">
             @guest
                 <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
+                <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
                 <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
                 <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Iniciar sesión</a>
             @else
@@ -196,8 +220,10 @@
                 <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
                 <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
                 <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
+                <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
                 @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
                     <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
+                    <a href="{{ route('admin.comunicados.index') }}" class="{{ request()->routeIs('admin.comunicados.*') ? 'activo' : '' }}">Comunicados</a>
                     <a href="{{ route('admin.fotos.index') }}" class="{{ request()->routeIs('admin.fotos.*') ? 'activo' : '' }}">Fotos</a>
                 @endif
                 <span class="usuario">{{ auth()->user()->name }}</span>

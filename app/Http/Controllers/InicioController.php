@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comunicado;
 use App\Models\DatoMercado;
 use App\Models\FotoMercado;
 use App\Models\Seccion;
@@ -22,6 +23,8 @@ class InicioController extends Controller
 
         $fotos = FotoMercado::orderBy('orden')->orderBy('id')->get();
 
-        return view('inicio', compact('dato', 'secciones', 'fotos'));
+        $comunicados = Comunicado::vigentes()->take(3)->get();
+
+        return view('inicio', compact('dato', 'secciones', 'fotos', 'comunicados'));
     }
 }
