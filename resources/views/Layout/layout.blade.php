@@ -14,6 +14,10 @@
             --slate: #777b86; --ash: #979799; --smoke: #a3a6af;
             --peach: #fbe1d1; --sienna: #5d2a1a; --line: #ececec;
         }
+        html { scroll-behavior: smooth; }
+        @view-transition { navigation: auto; }
+        ::view-transition-old(root),
+        ::view-transition-new(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(.2,.8,.2,1); }
         body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.35; color: var(--ink); background: var(--paper); min-height: 100vh; display: flex; flex-direction: column; }
         .serif { font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; }
         .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
@@ -22,8 +26,12 @@
         .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: wrap; gap: 12px 24px; }
         .logo { font-size: 22px; letter-spacing: -0.23px; color: var(--ink); text-decoration: none; flex-shrink: 0; }
         .menu { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; }
-        .menu a { color: var(--ink); text-decoration: none; font-size: 15px; padding: 2px 0; white-space: nowrap; }
-        .menu a:hover, .menu a.activo { border-bottom: 1px solid var(--ink); }
+        .menu a { position: relative; color: var(--ink); text-decoration: none; font-size: 15px; padding: 4px 8px; border-radius: 9999px; white-space: nowrap; transition: color 200ms ease-out, background-color 200ms ease-out, transform 200ms cubic-bezier(.2,.8,.2,1); }
+        .menu a::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 1px; height: 2px; border-radius: 9999px; background: var(--sienna); transform: scaleX(0); transform-origin: left center; transition: transform 200ms cubic-bezier(.2,.8,.2,1); }
+        .menu a:hover, .menu a.activo { background: var(--peach); color: var(--sienna); }
+        .menu a:hover { transform: translateY(-1px); }
+        .menu a:hover::after, .menu a.activo::after { transform: scaleX(1); }
+        .menu a.activo::after { animation: subrayado-activo 300ms cubic-bezier(.2,.8,.2,1) backwards; }
         .menu .usuario { font-size: 14px; color: var(--slate); white-space: nowrap; }
         .menu form { display: inline-flex; margin: 0; }
 
@@ -48,9 +56,9 @@
         /* Formularios */
         .campo { margin-bottom: 20px; }
         .etiqueta { display: block; font-size: 14px; color: var(--slate); margin-bottom: 6px; }
-        .input { width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; font-size: 16px; color: var(--ink); }
+        .input { width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; font-size: 16px; color: var(--ink); transition: border-color 180ms ease-out, box-shadow 180ms ease-out, background-color 180ms ease-out; }
         .input::placeholder { color: var(--smoke); }
-        .input:focus { outline: none; border-color: var(--ink); }
+        .input:focus { outline: none; border-color: var(--sienna); box-shadow: 0 0 0 4px var(--peach); }
         .error { display: inline-block; margin-top: 6px; padding: 3px 12px; border-radius: 9999px; background: var(--peach); color: var(--sienna); font-size: 14px; }
 
         /* Tablas y filtros */
@@ -67,7 +75,105 @@
 
         footer { color: var(--slate); font-size: 15px; padding-bottom: 40px; }
 
+        /* Movimiento y transiciones */
+        @keyframes subrayado-activo {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        @keyframes contenido-entrada {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes elemento-entrada {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes aviso-entrada {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fila-entrada {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes imagen-entrada {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes crecer-x {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        @keyframes crecer-y {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+
+        main { animation: contenido-entrada 300ms cubic-bezier(.2,.8,.2,1) backwards; }
+
+        .btn { transition: transform 180ms cubic-bezier(.2,.8,.2,1), background-color 180ms ease-out, border-color 180ms ease-out, color 180ms ease-out, opacity 180ms ease-out; }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+            outline: 2px solid var(--sienna);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px var(--peach);
+        }
+
+        .indicador, .panel, .tarjeta-mercado, .ficha-puesto .card, .foto-card { transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease-out; }
+        .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 28px -24px rgba(4,23,43,.35);
+        }
+
+        .indicadores > .indicador, .seccion-mercado > .tarjeta-mercado, .ficha-puesto > .card, .foto-grid > .foto-card, .dos-columnas > .panel, .bloque-seccion {
+            animation: elemento-entrada 320ms cubic-bezier(.2,.8,.2,1) backwards;
+        }
+        .indicadores > .indicador:nth-child(2), .seccion-mercado > .tarjeta-mercado:nth-child(2), .foto-grid > .foto-card:nth-child(2), .dos-columnas > .panel:nth-child(2), .bloque-seccion:nth-of-type(2) { animation-delay: 50ms; }
+        .indicadores > .indicador:nth-child(3), .seccion-mercado > .tarjeta-mercado:nth-child(3), .foto-grid > .foto-card:nth-child(3), .bloque-seccion:nth-of-type(3) { animation-delay: 100ms; }
+        .indicadores > .indicador:nth-child(4), .seccion-mercado > .tarjeta-mercado:nth-child(4), .foto-grid > .foto-card:nth-child(4), .bloque-seccion:nth-of-type(4) { animation-delay: 150ms; }
+        .indicadores > .indicador:nth-child(5), .foto-grid > .foto-card:nth-child(5), .bloque-seccion:nth-of-type(5) { animation-delay: 200ms; }
+        .indicadores > .indicador:nth-child(6), .foto-grid > .foto-card:nth-child(6), .bloque-seccion:nth-of-type(6) { animation-delay: 250ms; }
+
+        .tabla tbody tr { animation: fila-entrada 280ms ease-out backwards; }
+        .tabla tbody td { transition: background-color 180ms ease-out; }
+        .tabla tbody tr:nth-child(2) { animation-delay: 30ms; }
+        .tabla tbody tr:nth-child(3) { animation-delay: 60ms; }
+        .tabla tbody tr:nth-child(4) { animation-delay: 90ms; }
+        .tabla tbody tr:nth-child(5) { animation-delay: 120ms; }
+        .tabla tbody tr:nth-child(6) { animation-delay: 150ms; }
+
+        .puesto { transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease-out, background-color 180ms ease-out, color 180ms ease-out; }
+        .mapa-grid .puesto { position: relative; }
+        .mapa-grid .puesto:hover { opacity: 1; transform: scale(1.05); box-shadow: 0 12px 20px -14px rgba(4,23,43,.5); z-index: 2; }
+        .mapa-grid .puesto:active { transform: scale(.98); }
+
+        .galeria figure, .foto-card { overflow: hidden; }
+        .galeria figure { border-radius: 20px; }
+        .galeria figcaption { position: relative; background: var(--paper); }
+        .galeria img, .foto-card img { animation: imagen-entrada 400ms ease-out backwards; transition: transform 250ms cubic-bezier(.2,.8,.2,1); }
+        .galeria figure:hover img, .foto-card:hover img { transform: scale(1.03); }
+
+        .barra-ocupacion span { transform-origin: left center; animation: crecer-x 400ms cubic-bezier(.2,.8,.2,1) backwards; }
+        .grafico .barra-mes { transform-origin: bottom center; animation: crecer-y 400ms cubic-bezier(.2,.8,.2,1) backwards; }
+        .grafico .columna:nth-child(2) .barra-mes { animation-delay: 50ms; }
+        .grafico .columna:nth-child(3) .barra-mes { animation-delay: 100ms; }
+        .grafico .columna:nth-child(4) .barra-mes { animation-delay: 150ms; }
+        .grafico .columna:nth-child(5) .barra-mes { animation-delay: 200ms; }
+        .grafico .columna:nth-child(6) .barra-mes { animation-delay: 250ms; }
+
+        .aviso { animation: aviso-entrada 350ms cubic-bezier(.2,.8,.2,1) backwards; }
+
         @media (max-width: 640px) { .titulo { font-size: 32px; } .menu { gap: 6px 16px; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            @view-transition { navigation: none; }
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .btn:hover, .btn:active, .menu a:hover, .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .mapa-grid .puesto:hover, .mapa-grid .puesto:active, .galeria figure:hover img, .foto-card:hover img { transform: none; }
+            ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+        }
     </style>
     @stack('styles')
 </head>
