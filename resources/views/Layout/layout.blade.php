@@ -19,15 +19,18 @@
         .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
         /* Barra superior */
-        .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .logo { font-size: 22px; letter-spacing: -0.23px; color: var(--ink); text-decoration: none; }
-        .menu a { color: var(--ink); text-decoration: none; font-size: 16px; margin-left: 24px; padding: 2px 0; }
+        .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: wrap; gap: 12px 24px; }
+        .logo { font-size: 22px; letter-spacing: -0.23px; color: var(--ink); text-decoration: none; flex-shrink: 0; }
+        .menu { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; }
+        .menu a { color: var(--ink); text-decoration: none; font-size: 15px; padding: 2px 0; white-space: nowrap; }
         .menu a:hover, .menu a.activo { border-bottom: 1px solid var(--ink); }
+        .menu .usuario { font-size: 14px; color: var(--slate); white-space: nowrap; }
+        .menu form { display: inline-flex; margin: 0; }
 
         /* Encabezado de página */
-        .titulo { font-size: 44px; line-height: 1.3; letter-spacing: -0.66px; margin-top: 40px; }
-        .subtitulo { font-size: 17px; color: var(--slate); margin-top: 8px; max-width: 640px; }
-        main { flex-grow: 1; padding-top: 40px; padding-bottom: 80px; }
+        .titulo { font-size: 44px; line-height: 1.3; letter-spacing: -0.66px; margin-top: 56px; }
+        .subtitulo { font-size: 17px; color: var(--slate); margin-top: 10px; max-width: 640px; }
+        main { flex-grow: 1; padding-top: 48px; padding-bottom: 80px; }
 
         /* Botones */
         .btn { display: inline-flex; align-items: center; border-radius: 9999px; padding: 10px 20px; font-size: 16px; background: var(--ink); color: #fff; border: 1px solid var(--ink); cursor: pointer; text-decoration: none; }
@@ -64,7 +67,7 @@
 
         footer { color: var(--slate); font-size: 15px; padding-bottom: 40px; }
 
-        @media (max-width: 640px) { .titulo { font-size: 32px; } .menu a { margin-left: 0; margin-right: 16px; } }
+        @media (max-width: 640px) { .titulo { font-size: 32px; } .menu { gap: 6px 16px; } }
     </style>
     @stack('styles')
 </head>
@@ -72,31 +75,31 @@
     <header class="contenedor barra">
         <a href="{{ route('inicio') }}" class="logo serif">Mercado Rodríguez</a>
         <nav class="menu">
-            <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
-            <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
-            @auth
-                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN, \App\Models\User::ROL_COBRADOR))
-                    <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
-                    <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
-                    <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
-                    <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
-                    <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
-                    <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
-                    <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
-                @endif
+            @guest
+                <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
+                <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
+                <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Iniciar sesión</a>
+            @else
                 @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">Dashboard</a>
-                    <a href="{{ route('admin.mercado.edit') }}" class="{{ request()->routeIs('admin.mercado.*') ? 'activo' : '' }}">Administración</a>
+                @endif
+                <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
+                <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
+                <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
+                <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
+                <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
+                <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
+                <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
+                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                    <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
                     <a href="{{ route('admin.fotos.index') }}" class="{{ request()->routeIs('admin.fotos.*') ? 'activo' : '' }}">Fotos</a>
                 @endif
-                <span class="etiqueta-estado" style="margin-left: 24px">{{ auth()->user()->name }}</span>
-                <form method="POST" action="{{ route('logout') }}" style="display: inline">
+                <span class="usuario">{{ auth()->user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="btn btn-ghost btn-sm">Salir</button>
+                    <button class="btn btn-ghost btn-sm">Cerrar sesión</button>
                 </form>
-            @else
-                <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Iniciar sesión</a>
-            @endauth
+            @endguest
         </nav>
     </header>
 
