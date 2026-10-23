@@ -24,6 +24,20 @@ class PuestoController extends Controller
         return view('puestos.index', compact('puestos', 'secciones'));
     }
 
+    public function libres(Request $request)
+    {
+        $puestos = Puesto::with('seccion')
+            ->where('estado', 'libre')
+            ->when($request->filled('seccion_id'), fn ($q) => $q->where('seccion_id', $request->seccion_id))
+            ->orderBy('codigo')
+            ->paginate(12)
+            ->withQueryString();
+
+        $secciones = Seccion::orderBy('nombre')->get(['id', 'nombre']);
+
+        return view('puestos.libres', compact('puestos', 'secciones'));
+    }
+
     public function create()
     {
         $puesto = new Puesto();

@@ -70,9 +70,10 @@
 </head>
 <body>
     <header class="contenedor barra">
-        <a href="{{ url('/') }}" class="logo serif">Mercado Rodríguez</a>
+        <a href="{{ route('inicio') }}" class="logo serif">Mercado Rodríguez</a>
         <nav class="menu">
-            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'activo' : '' }}">El mercado</a>
+            <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
+            <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
             @auth
                 @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN, \App\Models\User::ROL_COBRADOR))
                     <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
@@ -84,6 +85,8 @@
                 @endif
                 @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">Dashboard</a>
+                    <a href="{{ route('admin.mercado.edit') }}" class="{{ request()->routeIs('admin.mercado.*') ? 'activo' : '' }}">Administración</a>
+                    <a href="{{ route('admin.fotos.index') }}" class="{{ request()->routeIs('admin.fotos.*') ? 'activo' : '' }}">Fotos</a>
                 @endif
                 <span class="etiqueta-estado" style="margin-left: 24px">{{ auth()->user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}" style="display: inline">

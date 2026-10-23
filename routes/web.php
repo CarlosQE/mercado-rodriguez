@@ -3,6 +3,9 @@
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\ComercianteController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DatoMercadoController;
+use App\Http\Controllers\FotoMercadoController;
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ObligacionController;
 use App\Http\Controllers\PagoController;
@@ -10,7 +13,8 @@ use App\Http\Controllers\PuestoController;
 use App\Http\Controllers\SeccionController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/secciones');
+Route::get('/', [InicioController::class, 'index'])->name('inicio');
+Route::get('puestos-libres', [PuestoController::class, 'libres'])->name('puestos.libres');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'create'])->name('login');
@@ -48,4 +52,11 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::patch('asignaciones/{asignacion}/cerrar', [AsignacionController::class, 'cerrar'])->name('asignaciones.cerrar');
     Route::post('obligaciones/emitir', [ObligacionController::class, 'emitir'])->name('obligaciones.emitir');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('admin/mercado', [DatoMercadoController::class, 'edit'])->name('admin.mercado.edit');
+    Route::put('admin/mercado', [DatoMercadoController::class, 'update'])->name('admin.mercado.update');
+    Route::get('admin/fotos', [FotoMercadoController::class, 'index'])->name('admin.fotos.index');
+    Route::post('admin/fotos', [FotoMercadoController::class, 'store'])->name('admin.fotos.store');
+    Route::put('admin/fotos/{foto}', [FotoMercadoController::class, 'update'])->whereNumber('foto')->name('admin.fotos.update');
+    Route::delete('admin/fotos/{foto}', [FotoMercadoController::class, 'destroy'])->whereNumber('foto')->name('admin.fotos.destroy');
 });

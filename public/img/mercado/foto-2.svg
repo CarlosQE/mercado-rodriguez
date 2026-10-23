@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Composición abstracta de un pasillo con puestos de frutas y verduras">
+  <defs>
+    <linearGradient id="pasillo2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fafafb"/>
+      <stop offset="1" stop-color="#f2f2f3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#pasillo2)"/>
+  <path d="M0 0h420l360 900H0z" fill="#ececec"/>
+  <path d="M1600 0h-420l-360 900h780z" fill="#ececec"/>
+  <rect x="620" y="120" width="360" height="660" rx="180" fill="#ffffff"/>
+  <circle cx="800" cy="300" r="70" fill="#fbe1d1"/>
+  <circle cx="800" cy="520" r="110" fill="#5d2a1a" opacity=".1"/>
+  <g fill="#5d2a1a" opacity=".62">
+    <circle cx="260" cy="300" r="54"/>
+    <circle cx="390" cy="300" r="54"/>
+    <circle cx="260" cy="430" r="54"/>
+    <circle cx="390" cy="430" r="54"/>
+  </g>
+  <g fill="#fbe1d1">
+    <circle cx="1210" cy="300" r="54"/>
+    <circle cx="1340" cy="300" r="54"/>
+    <circle cx="1210" cy="430" r="54"/>
+    <circle cx="1340" cy="430" r="54"/>
+  </g>
+  <path d="M700 700h200" stroke="#17191c" stroke-width="12" stroke-linecap="round"/>
+  <path d="M740 760h120" stroke="#17191c" stroke-width="8" stroke-linecap="round" opacity=".4"/>
+</svg>

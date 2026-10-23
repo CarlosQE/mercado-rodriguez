@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             'rol' => User::ROL_COBRADOR,
         ]);
 
+        $this->call(MercadoSeeder::class);
+
         $inicio = today()->startOfMonth()->subMonths(5);
         $cambio = today()->startOfMonth()->subMonths(2);
 
