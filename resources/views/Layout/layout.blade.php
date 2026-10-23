@@ -70,14 +70,29 @@
 </head>
 <body>
     <header class="contenedor barra">
-        <a href="{{ route('secciones.index') }}" class="logo serif">Mercado Rodríguez</a>
+        <a href="{{ url('/') }}" class="logo serif">Mercado Rodríguez</a>
         <nav class="menu">
-            <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
-            <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
-            <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
-            <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
-            <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
-            <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
+            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'activo' : '' }}">El mercado</a>
+            @auth
+                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN, \App\Models\User::ROL_COBRADOR))
+                    <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
+                    <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
+                    <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
+                    <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
+                    <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
+                    <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
+                @endif
+                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">Dashboard</a>
+                @endif
+                <span class="etiqueta-estado" style="margin-left: 24px">{{ auth()->user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline">
+                    @csrf
+                    <button class="btn btn-ghost btn-sm">Salir</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Iniciar sesión</a>
+            @endauth
         </nav>
     </header>
 

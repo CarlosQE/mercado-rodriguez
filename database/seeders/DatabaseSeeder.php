@@ -1,12 +1,26 @@
 <?php
 namespace Database\Seeders;
-use App\Models\{Asignacion, Comerciante, Obligacion, Pago, Puesto, Seccion};
+use App\Models\{Asignacion, Comerciante, Obligacion, Pago, Puesto, Seccion, User};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        User::create([
+            'name' => 'Administración del Mercado',
+            'email' => 'admin@mercado.test',
+            'password' => 'mercado123',
+            'rol' => User::ROL_ADMIN,
+        ]);
+
+        User::create([
+            'name' => 'Cobrador de Turno',
+            'email' => 'cobrador@mercado.test',
+            'password' => 'mercado123',
+            'rol' => User::ROL_COBRADOR,
+        ]);
+
         $inicio = today()->startOfMonth()->subMonths(5);
         $cambio = today()->startOfMonth()->subMonths(2);
 

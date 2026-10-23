@@ -6,9 +6,16 @@ use App\Models\Asignacion;
 use App\Models\Comerciante;
 use App\Models\Puesto;
 use App\Models\Seccion;
+use App\Models\User;
 
 trait CreaMercado
 {
+    /** Crea un usuario con el rol indicado para actuar en las pruebas. */
+    protected function usuario(string $rol = User::ROL_ADMIN): User
+    {
+        return User::factory()->create(['rol' => $rol]);
+    }
+
     /** Crea una sección (Bs 30/m²), un puesto de 12 m² y un comerciante activo. */
     protected function escenario(string $estado = 'libre'): array
     {
