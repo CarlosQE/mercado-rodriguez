@@ -15,7 +15,9 @@
             </select>
             <button class="btn btn-ghost">Filtrar</button>
         </form>
-        <a href="{{ route('comerciantes.create') }}" class="btn">Nuevo comerciante</a>
+        @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+            <a href="{{ route('comerciantes.create') }}" class="btn">Nuevo comerciante</a>
+        @endif
     </div>
 
     <div class="artefacto">
@@ -41,14 +43,16 @@
                             <span class="etiqueta-estado {{ $c->activo ? '' : 'clausurado' }}">{{ $c->activo ? 'Activo' : 'Inactivo' }}</span>
                         </td>
                         <td>
-                            <div class="acciones">
-                                <a href="{{ route('comerciantes.edit', $c) }}" class="btn btn-ghost btn-sm">Editar</a>
-                                <form method="POST" action="{{ route('comerciantes.destroy', $c) }}" onsubmit="return confirm('¿Eliminar al comerciante?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-ghost btn-sm">Eliminar</button>
-                                </form>
-                            </div>
+                            @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                                <div class="acciones">
+                                    <a href="{{ route('comerciantes.edit', $c) }}" class="btn btn-ghost btn-sm">Editar</a>
+                                    <form method="POST" action="{{ route('comerciantes.destroy', $c) }}" onsubmit="return confirm('¿Eliminar al comerciante?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-ghost btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                            @endif
                         </td>
                     </tr>
                 @empty

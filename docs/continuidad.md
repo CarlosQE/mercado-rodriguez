@@ -14,12 +14,14 @@ Estos supuestos están reflejados en el sistema; no son reglas municipales confi
 | Transferencia | Se cierra la asignación y se abre otra; las deudas quedan con el titular anterior |
 | Pagos | Siempre completos; no hay anulación ni notas de crédito |
 | Comerciantes | Pueden tener varias asignaciones simultáneas; no hay límite |
-| Usuarios | No hay autenticación, roles ni auditoría |
+| Usuarios | Hay dos roles (`admin` y `cobrador`) creados por el seeder; no hay registro público ni auditoría de acciones |
+| Contenido del mercado | La historia, dirección, coordenadas y contacto son ficticios, solo para el ejercicio académico |
+| Fotos | La galería acepta relleno SVG y subidas JPG/PNG/WebP; las relleno no se borran del disco desde la interfaz |
 
 ## Posibles mejoras
 
 - Acción "Transferir puesto" en un solo paso.
-- Autenticación y roles.
+- Administración de usuarios desde la interfaz.
 - Anulación de pagos con motivo.
 - Restricción de exclusión (`EXCLUDE USING gist`) en PostgreSQL para impedir asignaciones superpuestas a nivel de base de datos.
-- Panel inicial con puestos por estado y total adeudado.
+- Historial de tarifas por sección.

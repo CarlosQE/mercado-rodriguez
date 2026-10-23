@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Composición abstracta de la zona de comida">
+  <rect width="1600" height="900" fill="#fafafb"/>
+  <rect x="0" y="620" width="1600" height="280" fill="#fbe1d1"/>
+  <circle cx="380" cy="340" r="170" fill="#ffffff"/>
+  <circle cx="380" cy="340" r="110" fill="#f2f2f3"/>
+  <circle cx="380" cy="340" r="54" fill="#5d2a1a" opacity=".25"/>
+  <rect x="700" y="180" width="700" height="360" rx="40" fill="#17191c"/>
+  <rect x="760" y="240" width="580" height="46" rx="23" fill="#fbe1d1"/>
+  <rect x="760" y="320" width="380" height="30" rx="15" fill="#ffffff" opacity=".55"/>
+  <rect x="760" y="380" width="460" height="30" rx="15" fill="#ffffff" opacity=".32"/>
+  <g fill="#5d2a1a" opacity=".7">
+    <circle cx="780" cy="700" r="46"/>
+    <circle cx="900" cy="700" r="46"/>
+    <circle cx="1020" cy="700" r="46"/>
+  </g>
+  <path d="M700 540h700" stroke="#5d2a1a" stroke-width="10" stroke-linecap="round" opacity=".18"/>
+</svg>

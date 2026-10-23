@@ -22,7 +22,9 @@
             </select>
             <button class="btn btn-ghost">Filtrar</button>
         </form>
-        <a href="{{ route('puestos.create') }}" class="btn">Nuevo puesto</a>
+        @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+            <a href="{{ route('puestos.create') }}" class="btn">Nuevo puesto</a>
+        @endif
     </div>
 
     <div class="artefacto">
@@ -45,12 +47,15 @@
                         <td><span class="etiqueta-estado {{ $puesto->estado }}">{{ ucfirst($puesto->estado) }}</span></td>
                         <td>
                             <div class="acciones">
-                                <a href="{{ route('puestos.edit', $puesto) }}" class="btn btn-ghost btn-sm">Editar</a>
-                                <form method="POST" action="{{ route('puestos.destroy', $puesto) }}" onsubmit="return confirm('¿Eliminar el puesto?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-ghost btn-sm">Eliminar</button>
-                                </form>
+                                <a href="{{ route('puestos.show', $puesto) }}" class="btn btn-ghost btn-sm">Ver</a>
+                                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                                    <a href="{{ route('puestos.edit', $puesto) }}" class="btn btn-ghost btn-sm">Editar</a>
+                                    <form method="POST" action="{{ route('puestos.destroy', $puesto) }}" onsubmit="return confirm('¿Eliminar el puesto?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-ghost btn-sm">Eliminar</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

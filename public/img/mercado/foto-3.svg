@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Composición abstracta de la zona de carnes">
+  <defs>
+    <linearGradient id="carne3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5d2a1a"/>
+      <stop offset="1" stop-color="#17191c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#carne3)"/>
+  <rect x="140" y="160" width="1320" height="580" rx="42" fill="#ffffff" opacity=".08"/>
+  <rect x="220" y="240" width="420" height="420" rx="24" fill="#fbe1d1"/>
+  <rect x="700" y="240" width="300" height="190" rx="24" fill="#ffffff" opacity=".9"/>
+  <rect x="1060" y="240" width="300" height="190" rx="24" fill="#ffffff" opacity=".65"/>
+  <rect x="700" y="470" width="660" height="190" rx="24" fill="#fbe1d1" opacity=".45"/>
+  <circle cx="430" cy="450" r="110" fill="#5d2a1a" opacity=".15"/>
+  <path d="M290 380h280M290 460h180M290 540h230" stroke="#5d2a1a" stroke-width="12" stroke-linecap="round" opacity=".55"/>
+  <path d="M760 330h180M760 390h120M1120 330h180M1120 390h100" stroke="#17191c" stroke-width="10" stroke-linecap="round" opacity=".4"/>
+</svg>

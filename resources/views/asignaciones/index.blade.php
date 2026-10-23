@@ -19,7 +19,9 @@
             </select>
             <button class="btn btn-ghost">Filtrar</button>
         </form>
-        <a href="{{ route('asignaciones.create') }}" class="btn">Nueva asignación</a>
+        @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+            <a href="{{ route('asignaciones.create') }}" class="btn">Nueva asignación</a>
+        @endif
     </div>
 
     <div class="artefacto">
@@ -43,7 +45,7 @@
                         <td>{{ $a->fecha_fin ? $a->fecha_fin->format('d/m/Y') : 'Vigente' }}</td>
                         <td>{{ $a->motivo }}</td>
                         <td>
-                            @if (! $a->fecha_fin)
+                            @if (! $a->fecha_fin && auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
                                 <form method="POST" action="{{ route('asignaciones.cerrar', $a) }}" class="acciones" onsubmit="return confirm('¿Cerrar la asignación?')">
                                     @csrf
                                     @method('PATCH')

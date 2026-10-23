@@ -14,6 +14,7 @@ Sistema web para gestionar los alquileres de un mercado municipal ficticio: secc
 | Backend | Laravel, PHP 8.3+ |
 | Base de datos | PostgreSQL (Docker Compose, puerto host 5433) |
 | Frontend | Blade + Tailwind por CDN + CSS propio (Inter / Source Serif 4) |
+| Acceso | Sesiones de Laravel con roles `admin` y `cobrador` |
 | Pruebas | PHPUnit (Feature tests) sobre una base de datos aparte |
 
 ## Módulos
@@ -26,6 +27,10 @@ Sistema web para gestionar los alquileres de un mercado municipal ficticio: secc
 | Asignaciones | Historial de quién ocupa cada puesto. Crear ocupa el puesto; cerrar (con fecha de fin) lo libera. Se rechazan intervalos superpuestos. |
 | Obligaciones | Se emiten por período. Importe = superficie × tarifa de la sección, copiado al emitir. |
 | Pagos | Un pago cubre una o más obligaciones completas de un comerciante. Comprobante correlativo `MR-00001`. |
+| El mercado | Portada pública con historia, secciones, ubicación, mapa de OpenStreetMap y galería de fotos. |
+| Puestos libres | Listado público paginado, filtrable por sección, con cuota mensual estimada. |
+| Mapa | Cuadrícula de puestos por sección para admin y cobrador; cada puesto abre su ficha con historial. |
+| Dashboard | Indicadores, ocupación, recaudación, deudores, vencimientos y alertas (solo admin). |
 
 ## Reglas de negocio
 
@@ -35,6 +40,19 @@ Sistema web para gestionar los alquileres de un mercado municipal ficticio: secc
 - "Vencida" no se guarda: es una obligación `pendiente` cuyo vencimiento ya pasó.
 - **Pagos completos:** sin pagos parciales. Las obligaciones pasan a `pagada` en la misma transacción que crea el pago.
 - Asignaciones y pagos no se editan ni se eliminan (historial).
+
+## Acceso y roles
+
+El sistema no tiene registro público. Las cuentas se crean en la siembra de demostración:
+
+| Rol | Correo | Contraseña | Puede |
+|---|---|---|---|
+| Admin | `admin@mercado.test` | `mercado123` | Todo: CRUD, asignaciones, emisión, pagos, dashboard y administración del mercado. |
+| Cobrador | `cobrador@mercado.test` | `mercado123` | Consultar listados, mapa y fichas; registrar pagos. |
+
+> Las credenciales son solo para desarrollo. Cámbialas antes de publicar el sistema.
+
+Los visitantes sin sesión pueden ver la portada (`/`), los puestos libres (`/puestos-libres`) y el formulario de login. El resto de las rutas exige sesión y el rol correspondiente; los botones de escritura también se ocultan en las vistas. Al entrar, el admin va al dashboard y el cobrador al mapa de puestos.
 
 ## Puesta en marcha
 
@@ -46,6 +64,14 @@ Requisitos: PHP 8.3+ con `pdo_pgsql`, Composer, Docker.
 ```
 
 Para preparar de nuevo un entorno ya sembrado, usar `./scripts/setup` sin `--demo`. El seeder completo rechaza datos existentes; no borra ni actualiza el demo. Requisitos, credenciales, instalación manual y diagnóstico: [instalación](docs/instalacion.md).
+
+Las fotos que se suben desde **`/admin/fotos`** se guardan en `storage/app/public/mercado` y se muestran con un enlace simbólico. Créalo una vez con:
+
+```bash
+php artisan storage:link
+```
+
+Detalle de tamaños, formatos y prompts sugeridos para generar fotos con IA: [imágenes con IA](docs/imagenes-ia.md).
 
 Si el servidor integrado va lento, levántalo con varios procesos:
 
@@ -75,8 +101,5 @@ Detalle de lo que cubren en [pruebas](docs/pruebas.md).
 | [Arquitectura](docs/arquitectura.md) | Rutas, validaciones y flujos transaccionales |
 | [Datos de demostración](docs/datos-demo.md) | Composición y fechas de la siembra |
 | [Pruebas](docs/pruebas.md) | Ejecución y cobertura |
+| [Imágenes con IA](docs/imagenes-ia.md) | Tamaño, formato y prompts para la galería |
 | [Continuidad](docs/continuidad.md) | Supuestos a confirmar y próximos pasos |
-
-## Alcance
-
-Esta versión no incluye autenticación ni roles.

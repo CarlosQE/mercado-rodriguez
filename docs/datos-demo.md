@@ -15,6 +15,9 @@ Los nombres, documentos y direcciones salen de Faker y cambian entre ejecuciones
 
 | Elemento | Cantidad |
 |---|---:|
+| Usuarios | 2: `admin@mercado.test` (admin) y `cobrador@mercado.test` (cobrador), contraseña `mercado123` |
+| Ficha del mercado | 1 fila inventada: historia de 4 párrafos, dirección y coordenadas referenciales de La Paz |
+| Fotos | 6 composiciones SVG en `public/img/mercado/` |
 | Secciones | 4: Carnes (Bs 30), Verduras (Bs 18), Abarrotes (Bs 24), Comida (Bs 35) |
 | Puestos | 320 (80 + 100 + 80 + 60), códigos `CAR-001`, `VER-001`, `ABA-001`, `COM-001` |
 | Comerciantes | 280 |

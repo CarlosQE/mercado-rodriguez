@@ -40,6 +40,8 @@ class PagoTest extends TestCase
 
     public function test_un_pago_marca_las_obligaciones_como_pagadas(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario('ocupado');
         $asignacion = $this->asignacion($puesto, $comerciante, today()->subMonths(4));
         $o1 = $this->obligacion($asignacion, 2, '100.00');
@@ -57,6 +59,8 @@ class PagoTest extends TestCase
 
     public function test_el_comprobante_es_correlativo(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario('ocupado');
         $asignacion = $this->asignacion($puesto, $comerciante, today()->subMonths(4));
         $o1 = $this->obligacion($asignacion, 2, '100.00');
@@ -73,6 +77,8 @@ class PagoTest extends TestCase
 
     public function test_rechaza_obligaciones_de_otro_comerciante(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $titular] = $this->escenario('ocupado');
         $asignacion = $this->asignacion($puesto, $titular, today()->subMonths(4));
         $ajena = $this->obligacion($asignacion, 1, '100.00');
@@ -86,6 +92,8 @@ class PagoTest extends TestCase
 
     public function test_rechaza_una_obligacion_ya_pagada(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario('ocupado');
         $asignacion = $this->asignacion($puesto, $comerciante, today()->subMonths(4));
         $pagada = $this->obligacion($asignacion, 1, '100.00', 'pagada');

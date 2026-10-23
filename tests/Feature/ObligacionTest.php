@@ -13,6 +13,8 @@ class ObligacionTest extends TestCase
 
     public function test_emitir_calcula_el_importe_y_no_duplica(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario('ocupado');
         $this->asignacion($puesto, $comerciante, now()->startOfMonth()->subMonth());
 
@@ -31,6 +33,8 @@ class ObligacionTest extends TestCase
 
     public function test_no_factura_una_asignacion_cerrada_antes_del_periodo(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario();
         $this->asignacion(
             $puesto,
@@ -47,6 +51,8 @@ class ObligacionTest extends TestCase
 
     public function test_no_emite_periodos_futuros(): void
     {
+        $this->actingAs($this->usuario());
+
         $this->post(route('obligaciones.emitir'), ['periodo' => now()->addMonth()->format('Y-m')])
             ->assertSessionHasErrors('periodo');
     }

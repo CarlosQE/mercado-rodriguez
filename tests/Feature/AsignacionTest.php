@@ -13,6 +13,8 @@ class AsignacionTest extends TestCase
 
     public function test_crear_una_asignacion_ocupa_el_puesto(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario();
 
         $this->post(route('asignaciones.store'), [
@@ -28,6 +30,8 @@ class AsignacionTest extends TestCase
 
     public function test_rechaza_una_asignacion_superpuesta(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $titular] = $this->escenario('ocupado');
         $this->asignacion($puesto, $titular, today()->subMonth());
         $otro = Comerciante::factory()->create(['activo' => true]);
@@ -44,6 +48,8 @@ class AsignacionTest extends TestCase
 
     public function test_rechaza_un_comerciante_inactivo(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto] = $this->escenario();
         $inactivo = Comerciante::factory()->create(['activo' => false]);
 
@@ -59,6 +65,8 @@ class AsignacionTest extends TestCase
 
     public function test_cerrar_una_asignacion_libera_el_puesto(): void
     {
+        $this->actingAs($this->usuario());
+
         [$puesto, $comerciante] = $this->escenario('ocupado');
         $asignacion = $this->asignacion($puesto, $comerciante, today()->subMonth());
 
