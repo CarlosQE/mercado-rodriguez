@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 continue;
             }
 
-            // Los primeros 20 puestos ocupados tuvieron una transferencia hace 3 meses.
+            // Los primeros 20 puestos ocupados tuvieron una transferencia hace 2 meses.
             $transferido = $k < 20;
             if ($transferido) {
                 Asignacion::factory()->create([

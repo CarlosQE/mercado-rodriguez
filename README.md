@@ -1,56 +1,82 @@
-# Mercado Rodriguez
+# Mercado Rodríguez
 
-Base Laravel para gestionar los alquileres de un mercado municipal ficticio. Esta entrega implementa el diseño y la persistencia: puestos, comerciantes, asignaciones históricas, tarifas por m², obligaciones mensuales, pagos e inspecciones sanitarias.
+Sistema web para gestionar los alquileres de un mercado municipal ficticio: secciones, puestos, comerciantes, asignaciones, obligaciones mensuales y pagos.
 
 **Entrada para el equipo: [guía de documentación](docs/README.md).**
 
-## Estado de la entrega
+- **Curso:** Tecnología Web I (UPDS)
+- **Repositorio:** https://github.com/CarlosQE/mercado-rodriguez
 
-- Laravel 13.37.0 con dependencias fijadas en `composer.lock`; PHP 8.3+ como mínimo de resolución, ejecución comprobada en PHP 8.5.0.
-- PostgreSQL 17 mediante Docker Compose, diez tablas de negocio, vista de saldos y dos migraciones.
-- Diez modelos Eloquent, diez Form Requests, diez factories y dos seeders.
-- Demo con 300 puestos y 280 comerciantes; pruebas de integración con PostgreSQL real.
-- Sin autenticación, controladores ni vistas de negocio. Única ruta HTTP propia: salud `/up`.
+## Stack
 
-El repositorio público [CarlosQE/mercado-rodriguez](https://github.com/CarlosQE/mercado-rodriguez) contiene el código y la documentación del proyecto en la rama `main`. El remoto local `origin` utiliza SSH.
+| Capa | Tecnología |
+|---|---|
+| Backend | Laravel, PHP 8.3+ |
+| Base de datos | PostgreSQL (Docker Compose, puerto host 5433) |
+| Frontend | Blade + Tailwind por CDN + CSS propio (Inter / Source Serif 4) |
+| Pruebas | PHPUnit (Feature tests) sobre una base de datos aparte |
 
-## Inicio local
+## Módulos
 
-Con PHP, Composer, Docker y Bash disponibles, desde una copia nueva del proyecto:
+| Módulo | Qué hace |
+|---|---|
+| Secciones | CRUD. Cada sección define la tarifa por m². No se elimina si tiene puestos. |
+| Puestos | CRUD con filtros por código, sección y estado (`libre`, `ocupado`, `clausurado`). Un puesto ocupado cambia de estado solo por asignaciones. |
+| Comerciantes | CRUD con búsqueda y estado activo/inactivo. No se elimina si tiene asignaciones o pagos. |
+| Asignaciones | Historial de quién ocupa cada puesto. Crear ocupa el puesto; cerrar (con fecha de fin) lo libera. Se rechazan intervalos superpuestos. |
+| Obligaciones | Se emiten por período. Importe = superficie × tarifa de la sección, copiado al emitir. |
+| Pagos | Un pago cubre una o más obligaciones completas de un comerciante. Comprobante correlativo `MR-00001`. |
+
+## Reglas de negocio
+
+- `asignaciones.fecha_fin` nula = asignación vigente. Un puesto no puede tener dos asignaciones superpuestas.
+- Solo se asignan puestos libres a comerciantes activos.
+- **Emisión:** se factura a quien tenga el puesto el primer día del período; no se emiten períodos futuros ni se duplican. Vencimiento por defecto: día 10.
+- "Vencida" no se guarda: es una obligación `pendiente` cuyo vencimiento ya pasó.
+- **Pagos completos:** sin pagos parciales. Las obligaciones pasan a `pagada` en la misma transacción que crea el pago.
+- Asignaciones y pagos no se editan ni se eliminan (historial).
+
+## Puesta en marcha
+
+Requisitos: PHP 8.3+ con `pdo_pgsql`, Composer, Docker.
 
 ```bash
-cd /ruta/al/mercado-rodriguez
-./scripts/setup --demo
-./scripts/serve
+./scripts/setup --demo   # crea .env, instala dependencias, levanta Postgres, migra y siembra
+./scripts/serve          # http://127.0.0.1:8000
 ```
 
-Abrir `http://127.0.0.1:8000/up`; se espera HTTP 200. La raíz `/` devuelve 404 porque no existe interfaz. PostgreSQL queda publicado en `127.0.0.1:5433`.
+Para preparar de nuevo un entorno ya sembrado, usar `./scripts/setup` sin `--demo`. El seeder completo rechaza datos existentes; no borra ni actualiza el demo. Requisitos, credenciales, instalación manual y diagnóstico: [instalación](docs/instalacion.md).
 
-Para preparar de nuevo un entorno ya sembrado, usar `./scripts/setup` sin `--demo`. El seeder completo rechaza datos existentes; no borra ni actualiza el demo. Los detalles de requisitos, credenciales, instalación manual y diagnóstico están en [instalación](docs/instalacion.md).
+Si el servidor integrado va lento, levántalo con varios procesos:
 
-## Documentación disponible
+```bash
+PHP_CLI_SERVER_WORKERS=4 php artisan serve
+```
+
+> `migrate:fresh` y `docker compose down -v` borran los datos.
+
+## Pruebas
+
+Las pruebas usan una base de datos propia (`mercado_rodriguez_test`) y la vacían en cada ejecución. Se niegan a correr si la base activa no termina en `_test`, así que nunca tocan los datos de desarrollo. Crear la base una sola vez:
+
+```bash
+php artisan tinker --execute="DB::statement('CREATE DATABASE mercado_rodriguez_test');"
+composer test
+```
+
+Detalle de lo que cubren en [pruebas](docs/pruebas.md).
+
+## Documentación
 
 | Documento | Contenido |
 |---|---|
-| [Arquitectura](docs/arquitectura.md) | Estructura, relaciones Eloquent y responsabilidades |
-| [Diagrama ER](docs/entidad-relacion.md) | Entidades, cardinalidades y decisiones de negocio |
-| [Diccionario de datos](docs/diccionario-datos.md) | Columnas, claves, índices, restricciones y triggers |
-| [Validaciones](docs/validaciones.md) | Contratos de los Requests y campos reservados |
-| [Demo y factories](docs/datos-demo.md) | Distribución, fechas, tarifas y generación de escenarios |
-| [Pruebas](docs/verificacion.md) | Ejecución, resultados y cobertura pendiente |
-| [Continuidad](docs/continuidad.md) | Próximas tareas, reglas a confirmar y colaboración Git |
+| [Instalación](docs/instalacion.md) | Requisitos, credenciales, instalación manual y diagnóstico |
+| [Modelo de datos](docs/modelo-de-datos.md) | Esquema, diccionario de datos e integridad |
+| [Arquitectura](docs/arquitectura.md) | Rutas, validaciones y flujos transaccionales |
+| [Datos de demostración](docs/datos-demo.md) | Composición y fechas de la siembra |
+| [Pruebas](docs/pruebas.md) | Ejecución y cobertura |
+| [Continuidad](docs/continuidad.md) | Supuestos a confirmar y próximos pasos |
 
-## Verificación
+## Alcance
 
-Con PostgreSQL iniciado:
-
-```bash
-composer validate --strict
-composer check-platform-reqs
-composer test
-docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1' < tests/sql/demo_assertions.sql
-```
-
-Las pruebas de integración crean y eliminan un esquema temporal aislado; necesitan permiso CREATE SCHEMA y ejecución de procesos PHP. Las comprobaciones SQL de la siembra sólo leen datos. Ambas suites pasaron el 17/10/2026; se verificaron también `/up` y los pagos simultáneos. Véase la [cobertura detallada](docs/verificacion.md).
-
-`.env`, dependencias y credenciales no se versionan. El usuario de la base de Compose es de desarrollo. No hay procedimiento de producción definido ni licencia de distribución acordada; Composer declara `proprietary`.
+Esta versión no incluye autenticación ni roles.

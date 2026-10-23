@@ -1,67 +1,49 @@
-# Arquitectura y mapa del código
+# Arquitectura
 
-## Responsabilidades actuales
+Aplicación Laravel con Blade en el servidor: un controlador por módulo, validación en Form Requests y operaciones críticas en transacciones. Sin API ni autenticación.
 
-El diseño separa datos persistentes, relaciones de dominio y validación de entradas. Las restricciones de PostgreSQL protegen también las escrituras realizadas fuera de HTTP. Los casos de uso transaccionales todavía no tienen implementación propia.
+## Estructura
 
-| Ubicación | Responsabilidad |
+```
+app/Http/Controllers/   Seccion, Puesto, Comerciante, Asignacion, Obligacion, Pago
+app/Http/Requests/      MarketRequest (base) y Save* de cada módulo
+app/Models/             6 modelos
+resources/views/        Layout/layout + una carpeta por módulo
+tests/Feature/          Pruebas de asignaciones, obligaciones y pagos
+```
+
+## Rutas
+
+| Módulo | Rutas |
 |---|---|
-| `bootstrap/app.php` | Arranque Laravel, comandos de consola y ruta de salud `/up` |
-| `bootstrap/providers.php` | Lista vacía de proveedores propios |
-| `public/index.php` | Entrada HTTP; no contiene lógica de negocio |
-| `routes/console.php` | Espacio reservado; no hay emisor mensual ni tareas programadas |
-| `config/` | Configuración mínima de aplicación, PostgreSQL y logging |
-| `app/Models/` | Modelos Eloquent, campos asignables, casts y relaciones |
-| `app/Http/Requests/` | Validación de datos y requisito básico de usuario autenticado |
-| `database/schema/mercado.sql` | Esquema inicial PostgreSQL, vista, funciones y triggers |
-| `database/migrations/` | Evolución ordenada del esquema; hoy dos migraciones |
-| `database/factories/` | Construcción de escenarios y relaciones compatibles |
-| `database/seeders/` | Catálogos y demostración completa |
-| `tests/runtime/check.php` | Integración con PostgreSQL y prueba concurrente |
-| `tests/sql/demo_assertions.sql` | Comprobaciones de la siembra, sin modificar filas |
-| `scripts/`, `compose.yaml` | Preparación, servidor local y base de desarrollo |
+| Secciones, Puestos, Comerciantes | CRUD completo sin `show` |
+| Asignaciones | `index`, `create`, `store`, `PATCH /asignaciones/{asignacion}/cerrar` |
+| Obligaciones | `index`, `POST /obligaciones/emitir` |
+| Pagos | `index`, `create`, `store`, `show` |
+| `/` | Redirige a `/secciones` |
 
-No hay controladores, vistas propias, rutas web/API de negocio, modelo User, migración de usuarios, políticas, repositorios, servicios, jobs ni configuración de frontend. La base Laravel es mínima: no asumir que todos los archivos del esqueleto estándar están presentes.
+Asignaciones y pagos no se editan ni se eliminan: son historial.
 
-## Relaciones Eloquent
+## Flujos transaccionales
 
-Todas las entidades usan claves `id`, tablas explícitas en español, timestamps y `HasFactory`.
+**Asignar un puesto.** En una transacción se bloquea el puesto (`lockForUpdate`), se comprueba que siga `libre`, se crea la asignación vigente y el puesto pasa a `ocupado`. El formulario ignora `fecha_fin`.
 
-| Modelo | Relaciones disponibles |
+**Cerrar una asignación.** Se fija `fecha_fin` (no anterior al inicio ni posterior a hoy) y el puesto vuelve a `libre`.
+
+**Emitir obligaciones.** Se factura a quien tenga el puesto el primer día del período (`fecha_inicio <= día 1` y `fecha_fin` nula o posterior). Se omiten las asignaciones que ya tienen obligación en ese período, no se emiten períodos futuros y el vencimiento por defecto es el día 10. Cada obligación copia superficie y tarifa e importa `superficie × tarifa`.
+
+**Registrar un pago.** En una transacción: se toma un bloqueo consultivo (`pg_advisory_xact_lock`) para numerar sin repetir, se bloquean las obligaciones elegidas y se verifica que sigan pendientes, se genera el comprobante siguiente al mayor existente, se crea el pago con `total` igual a la suma de importes, se llena `pago_obligacion` y las obligaciones pasan a `pagada`. No hay pagos parciales.
+
+## Validaciones
+
+| Request | Reglas principales |
 |---|---|
-| `Seccion` | `puestos()`, `tarifas()` |
-| `Comerciante` | `asignaciones()` |
-| `Puesto` | `seccion()`, `asignaciones()`, `clausuras()` |
-| `Tarifa` | `seccion()`, `obligaciones()` |
-| `Asignacion` | `puesto()`, `comerciante()`, `obligaciones()`, `inspecciones()` |
-| `Clausura` | `puesto()` |
-| `Obligacion` | `asignacion()`, `tarifa()`, `pagos()` |
-| `Pago` | `obligacion()` |
-| `Inspeccion` | `asignacion()`, `hallazgos()` |
-| `Hallazgo` | `inspeccion()` |
+| SaveSeccionRequest | `nombre` requerido, máx. 80, único; `tarifa_m2` entre 0.01 y 9999.99 |
+| SavePuestoRequest | `seccion_id` existente; `codigo` máx. 30, `[A-Z0-9-]+`, único; `superficie_m2` mayor que 0, hasta 2 decimales, máx. 999999.99 |
+| SaveComercianteRequest | `documento` máx. 30, único; nombres y apellidos máx. 100; `rubro` máx. 80; teléfono con formato; email opcional; dirección; `activo` booleano |
+| SaveAsignacionRequest | Puesto existente; comerciante activo; fechas `Y-m-d`; `fecha_fin` posterior al inicio; motivo; **sin superposición de intervalos** en el mismo puesto |
+| SavePagoRequest | Al menos una obligación, todas pendientes y del comerciante; fecha no futura; método efectivo o transferencia |
 
-`Puesto::estadoEn(string $fecha)` recibe una fecha `Y-m-d` y consulta clausura y asignación vigentes; devuelve `clausurado`, `ocupado` o `libre`, en ese orden de prioridad. No es una columna ni un accesor añadido automáticamente al JSON.
+Validaciones dentro de controladores: el estado de un puesto no ocupado solo puede ser `libre` o `clausurado`; al emitir, el período es `AAAA-MM` y no futuro.
 
-`Puesto::ultimaInspeccion()` devuelve `?Inspeccion`: consulta todas las asignaciones del puesto y ordena por fecha e ID descendentes. No es una relación Eloquent susceptible de `with()`. Para listados masivos, planificar una consulta agregada y evitar llamar estos métodos por cada fila sin medir el número de consultas.
-
-Los casts `date`/`datetime` entregan objetos de fecha; los casts `decimal:2`/`decimal:4` conservan representación decimal como cadena. La vista `saldos_obligaciones` se consulta con Query Builder; no existe un modelo propio para ella.
-
-## Persistencia y evolución
-
-La migración inicial carga `database/schema/mercado.sql` mediante `DB::unprepared`. No es un dump para `schema:load`. La segunda migración agrega `pagos_anulacion_motivo_check`: un motivo de anulación debe ser explícitamente no nulo y no vacío. El CHECK inicial por sí solo no bastaba debido a la lógica de NULL de PostgreSQL.
-
-Después de aplicar una migración, conservarla y añadir otra para modificar el esquema. Actualizar el diccionario y las pruebas cuando cambien columnas o funciones. No sustituir PostgreSQL por SQLite en pruebas: se usan rangos, EXCLUDE/GiST, triggers, columnas generadas y bloqueos reales.
-
-La transacción de una transferencia deberá cerrar la asignación previa y crear la siguiente. La emisión deberá elegir asignación y tarifa vigentes al inicio del mes. Un Request comprueba entradas, pero no coordina operaciones ni sustituye bloqueos. El trigger de pago bloquea la obligación con `FOR UPDATE`; el contrato probado usa READ COMMITTED.
-
-## Aplicación de KISS y SOLID
-
-Mantener los modelos centrados en persistencia y relaciones, Requests en validación y futuros casos de uso en la coordinación transaccional. Cuando existan controladores, deben delegar esas operaciones. Extraer una abstracción cuando haya una necesidad concreta de sustitución o reutilización; no crear repositorios genéricos o interfaces sin consumidores.
-
-Las reglas compartidas deben tener un lugar claro y pruebas: una restricción SQL garantiza integridad; una validación equivalente permite explicar el error antes de escribir. Las dos capas deben evolucionar juntas. `$fillable` no concede autorización ni garantiza que un cambio histórico sea válido.
-
-## Límites del historial actual
-
-Las obligaciones guardan superficie y tarifa al emitir; asignaciones e inspecciones conservan la referencia al titular de ese momento. Eso no constituye una auditoría completa de cada atributo: cambiar nombres o dirección del comerciante modifica lo que muestran futuras consultas por esa FK. No hay snapshots de identidad, usuario autor de las operaciones ni bitácora antes/después.
-
-Los triggers bloquean DELETE de asignaciones, tarifas, obligaciones, pagos, inspecciones, hallazgos y puestos. Secciones y comerciantes quedan protegidos de borrado cuando tienen referencias. Las clausuras tienen control de intervalos y FK, pero todavía no un trigger propio de inmutabilidad/borrado; las futuras acciones deberán definir su política de corrección. Tampoco hay un control de privilegios que impida a un administrador usar TRUNCATE o desactivar protecciones. Son límites a considerar al diseñar permisos y auditoría.
+Mensajes: `ok` (aviso neutro) y `error` (aviso durazno) desde el layout; los errores de campo se muestran junto a cada campo.

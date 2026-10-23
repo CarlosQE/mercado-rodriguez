@@ -4,22 +4,22 @@
 @section('header', 'Editar sección')
 
 @section('content')
-    <form method="POST" action="{{ route('secciones.update', $seccion) }}" class="max-w-md space-y-4 rounded bg-white p-6 shadow">
+    <form method="POST" action="{{ route('secciones.update', $seccion) }}" class="card">
         @csrf
         @method('PUT')
-        <div>
-            <label class="block font-semibold">Nombre</label>
-            <input type="text" name="nombre" value="{{ old('nombre', $seccion->nombre) }}" class="w-full rounded border p-2">
-            @error('nombre') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+        <div class="campo">
+            <label class="etiqueta">Nombre</label>
+            <input type="text" name="nombre" value="{{ old('nombre', $seccion->nombre) }}" class="input">
+            @error('nombre') <p class="error">{{ $message }}</p> @enderror
         </div>
-        <div>
-            <label class="block font-semibold">Tarifa por m² (Bs)</label>
-            <input type="number" step="0.01" name="tarifa_m2" value="{{ old('tarifa_m2', $seccion->tarifa_m2) }}" class="w-full rounded border p-2">
-            @error('tarifa_m2') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+        <div class="campo">
+            <label class="etiqueta">Tarifa por m² (Bs)</label>
+            <input type="number" step="0.01" name="tarifa_m2" value="{{ old('tarifa_m2', $seccion->tarifa_m2) }}" class="input">
+            @error('tarifa_m2') <p class="error">{{ $message }}</p> @enderror
         </div>
-        <div class="flex gap-2">
-            <button class="rounded bg-emerald-600 px-4 py-2 text-white">Actualizar</button>
-            <a href="{{ route('secciones.index') }}" class="rounded bg-gray-300 px-4 py-2">Cancelar</a>
+        <div class="acciones">
+            <button class="btn">Actualizar</button>
+            <a href="{{ route('secciones.index') }}" class="btn btn-ghost">Cancelar</a>
         </div>
     </form>
 @endsection

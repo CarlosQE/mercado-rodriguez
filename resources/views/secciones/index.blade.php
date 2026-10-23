@@ -1,53 +1,51 @@
 @extends('Layout.layout')
 
 @section('title', 'Secciones')
-@section('header', 'Secciones del mercado')
+@section('header', 'Secciones')
+@section('subtitle', 'Cada sección define la tarifa por metro cuadrado que se cobra a sus puestos.')
 
 @section('content')
-    @if (session('ok'))
-        <div class="mb-4 rounded bg-green-100 p-3 text-green-800">{{ session('ok') }}</div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 rounded bg-red-100 p-3 text-red-800">{{ session('error') }}</div>
-    @endif
-
-    <div class="mb-4 flex items-center justify-between gap-2">
-        <form method="GET" class="flex gap-2">
-            <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar sección" class="rounded border p-2">
-            <button class="rounded bg-teal-700 px-4 py-2 text-white">Buscar</button>
+    <div class="herramientas">
+        <form method="GET" class="filtros">
+            <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar sección" class="input">
+            <button class="btn btn-ghost">Buscar</button>
         </form>
-        <a href="{{ route('secciones.create') }}" class="rounded bg-emerald-600 px-4 py-2 text-white">Nueva sección</a>
+        <a href="{{ route('secciones.create') }}" class="btn">Nueva sección</a>
     </div>
 
-    <table class="w-full overflow-hidden rounded bg-white shadow">
-        <thead class="bg-teal-700 text-left text-white">
-            <tr>
-                <th class="p-3">Nombre</th>
-                <th class="p-3">Tarifa por m²</th>
-                <th class="p-3">Puestos</th>
-                <th class="p-3">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($secciones as $seccion)
-                <tr class="border-t">
-                    <td class="p-3">{{ $seccion->nombre }}</td>
-                    <td class="p-3">Bs {{ number_format($seccion->tarifa_m2, 2) }}</td>
-                    <td class="p-3">{{ $seccion->puestos_count }}</td>
-                    <td class="flex gap-2 p-3">
-                        <a href="{{ route('secciones.edit', $seccion) }}" class="rounded bg-amber-500 px-3 py-1 text-white">Editar</a>
-                        <form method="POST" action="{{ route('secciones.destroy', $seccion) }}" onsubmit="return confirm('¿Eliminar la sección?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="rounded bg-red-600 px-3 py-1 text-white">Eliminar</button>
-                        </form>
-                    </td>
+    <div class="artefacto">
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tarifa por m²</th>
+                    <th>Puestos</th>
+                    <th></th>
                 </tr>
-            @empty
-                <tr><td colspan="4" class="p-3 text-center">No hay secciones.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($secciones as $seccion)
+                    <tr>
+                        <td>{{ $seccion->nombre }}</td>
+                        <td>Bs {{ number_format($seccion->tarifa_m2, 2) }}</td>
+                        <td>{{ $seccion->puestos_count }}</td>
+                        <td>
+                            <div class="acciones">
+                                <a href="{{ route('secciones.edit', $seccion) }}" class="btn btn-ghost btn-sm">Editar</a>
+                                <form method="POST" action="{{ route('secciones.destroy', $seccion) }}" onsubmit="return confirm('¿Eliminar la sección?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-ghost btn-sm">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="4" style="text-align:center; color: var(--slate)">No hay secciones.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-    <div class="mt-4">{{ $secciones->links() }}</div>
+    <div style="margin-top: 24px">{{ $secciones->links() }}</div>
 @endsection
