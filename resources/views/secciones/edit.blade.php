@@ -13,6 +13,10 @@
             @error('nombre') <p class="error">{{ $message }}</p> @enderror
         </div>
         <div class="campo">
+            <label class="etiqueta">Prefijo</label>
+            <p>{{ $seccion->prefijo }}</p>
+        </div>
+        <div class="campo">
             <label class="etiqueta">Tarifa por m² (Bs)</label>
             <input type="number" step="0.01" name="tarifa_m2" value="{{ old('tarifa_m2', $seccion->tarifa_m2) }}" class="input">
             @error('tarifa_m2') <p class="error">{{ $message }}</p> @enderror

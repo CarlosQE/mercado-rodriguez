@@ -12,6 +12,12 @@
             @error('nombre') <p class="error">{{ $message }}</p> @enderror
         </div>
         <div class="campo">
+            <label class="etiqueta">Prefijo</label>
+            <input type="text" name="prefijo" value="{{ old('prefijo') }}" maxlength="3" placeholder="VER" class="input" style="text-transform: uppercase">
+            <p class="etiqueta">Se usa en el código de los puestos, por ejemplo VER-001. No se podrá cambiar después.</p>
+            @error('prefijo') <p class="error">{{ $message }}</p> @enderror
+        </div>
+        <div class="campo">
             <label class="etiqueta">Tarifa por m² (Bs)</label>
             <input type="number" step="0.01" name="tarifa_m2" value="{{ old('tarifa_m2') }}" class="input">
             @error('tarifa_m2') <p class="error">{{ $message }}</p> @enderror

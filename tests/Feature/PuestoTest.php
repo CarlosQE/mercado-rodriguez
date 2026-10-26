@@ -15,7 +15,7 @@ class PuestoTest extends TestCase
     public function test_el_codigo_se_genera_automaticamente_y_no_se_puede_sobrescribir(): void
     {
         $this->actingAs($this->usuario());
-        $seccion = Seccion::create(['nombre' => 'Verduras', 'tarifa_m2' => '18.00']);
+        $seccion = Seccion::create(['nombre' => 'Verduras', 'prefijo' => 'VER', 'tarifa_m2' => '18.00']);
 
         $this->get(route('puestos.create'))
             ->assertOk()

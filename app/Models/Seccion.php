@@ -11,7 +11,7 @@ class Seccion extends Model
     use HasFactory;
 
     protected $table = 'secciones';
-    protected $fillable = ['nombre', 'tarifa_m2'];
+    protected $fillable = ['nombre', 'prefijo', 'tarifa_m2'];
     protected function casts(): array
     {
         return ['tarifa_m2' => 'decimal:2'];

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Str;
 
 class Puesto extends Model
 {
@@ -27,7 +26,7 @@ class Puesto extends Model
 
     public function generarCodigo(Seccion $seccion): string
     {
-        $prefijo = Str::upper(Str::substr(Str::ascii($seccion->nombre), 0, 3));
+        $prefijo = $seccion->prefijo;
 
         $mayor = static::query()
             ->where('codigo', 'like', $prefijo.'-%')
