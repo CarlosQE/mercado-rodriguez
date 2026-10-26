@@ -66,7 +66,9 @@ class PuestoController extends Controller
 
     public function store(SavePuestoRequest $request)
     {
-        $puesto = new Puesto($request->validated());
+        $datos = $request->validated();
+        $puesto = new Puesto($datos);
+        $puesto->codigo = $puesto->generarCodigo(Seccion::findOrFail($datos['seccion_id']));
         $puesto->estado = 'libre';
         $puesto->save();
 

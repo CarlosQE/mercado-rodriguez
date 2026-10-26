@@ -24,6 +24,19 @@ class Puesto extends Model
         return $this->belongsTo(Seccion::class, 'seccion_id');
     }
 
+    public function generarCodigo(Seccion $seccion): string
+    {
+        $prefijo = $seccion->prefijo;
+
+        $mayor = static::query()
+            ->where('codigo', 'like', $prefijo.'-%')
+            ->pluck('codigo')
+            ->map(fn (string $codigo) => preg_match('/^'.preg_quote($prefijo, '/').'-(\d+)$/', $codigo, $coincidencias) ? (int) $coincidencias[1] : 0)
+            ->max() ?? 0;
+
+        return $prefijo.'-'.str_pad((string) ($mayor + 1), 3, '0', STR_PAD_LEFT);
+    }
+
     public function asignaciones(): HasMany
     {
         return $this->hasMany(Asignacion::class, 'puesto_id');

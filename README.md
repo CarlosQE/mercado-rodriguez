@@ -22,7 +22,7 @@ Sistema web para gestionar los alquileres de un mercado municipal ficticio: secc
 | Módulo | Qué hace |
 |---|---|
 | Secciones | CRUD. Cada sección define la tarifa por m². No se elimina si tiene puestos. |
-| Puestos | CRUD con filtros por código, sección y estado (`libre`, `ocupado`, `clausurado`). Un puesto ocupado cambia de estado solo por asignaciones. |
+| Puestos | CRUD con filtros por código, sección y estado (`libre`, `ocupado`, `clausurado`). El código se genera automáticamente como `XXX-NNN` a partir de la sección y no se edita. Un puesto ocupado cambia de estado solo por asignaciones. |
 | Comerciantes | CRUD con búsqueda y estado activo/inactivo. No se elimina si tiene asignaciones o pagos. |
 | Asignaciones | Historial de quién ocupa cada puesto. Crear ocupa el puesto; cerrar (con fecha de fin) lo libera. Se rechazan intervalos superpuestos. |
 | Obligaciones | Se emiten por período. Importe = superficie × tarifa de la sección, copiado al emitir. |
@@ -36,6 +36,7 @@ Sistema web para gestionar los alquileres de un mercado municipal ficticio: secc
 
 - `asignaciones.fecha_fin` nula = asignación vigente. Un puesto no puede tener dos asignaciones superpuestas.
 - Solo se asignan puestos libres a comerciantes activos.
+- **Código de puesto:** se genera automáticamente al crear como `XXX-NNN`, donde `XXX` son las 3 primeras letras de la sección en mayúsculas y sin tildes, y `NNN` es el correlativo de 3 dígitos. No se recibe desde el formulario ni se modifica al editar.
 - **Emisión:** se factura a quien tenga el puesto el primer día del período; no se emiten períodos futuros ni se duplican. Vencimiento por defecto: día 10.
 - "Vencida" no se guarda: es una obligación `pendiente` cuyo vencimiento ya pasó.
 - **Pagos completos:** sin pagos parciales. Las obligaciones pasan a `pagada` en la misma transacción que crea el pago.

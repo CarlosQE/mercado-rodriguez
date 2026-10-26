@@ -47,12 +47,14 @@ Asignaciones y pagos no se editan ni se eliminan: son historial.
 
 **Mapa y ficha.** El mapa muestra cada puesto con colores por estado y el titular vigente en el atributo `title`. La ficha carga la sección, la asignación vigente, el historial completo y las últimas obligaciones del puesto.
 
+**Crear un puesto.** El formulario no recibe el código. `Puesto::generarCodigo()` toma las 3 primeras letras del nombre de la sección con `Str::ascii` y `Str::upper`, busca el mayor correlativo de todos los códigos con ese prefijo y devuelve el siguiente con `str_pad` a 3 dígitos. La edición no cambia el código.
+
 ## Validaciones
 
 | Request | Reglas principales |
 |---|---|
 | SaveSeccionRequest | `nombre` requerido, máx. 80, único; `tarifa_m2` entre 0.01 y 9999.99 |
-| SavePuestoRequest | `seccion_id` existente; `codigo` máx. 30, `[A-Z0-9-]+`, único; `superficie_m2` mayor que 0, hasta 2 decimales, máx. 999999.99 |
+| SavePuestoRequest | `seccion_id` existente; `superficie_m2` mayor que 0, hasta 2 decimales, máx. 999999.99. `codigo` no se recibe: se genera automáticamente |
 | SaveComercianteRequest | `documento` máx. 30, único; nombres y apellidos máx. 100; `rubro` máx. 80; teléfono con formato; email opcional; dirección; `activo` booleano |
 | SaveAsignacionRequest | Puesto existente; comerciante activo; fechas `Y-m-d`; `fecha_fin` posterior al inicio; motivo; **sin superposición de intervalos** en el mismo puesto |
 | SavePagoRequest | Al menos una obligación, todas pendientes y del comerciante; fecha no futura; método efectivo o transferencia |

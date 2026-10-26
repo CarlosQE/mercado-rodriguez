@@ -18,9 +18,11 @@ Ejecuta PHPUnit sobre `tests/Feature` contra la base `mercado_rodriguez_test` (f
 | `MercadoTest` | Portada y puestos libres públicos; accesorio `url` de las fotos; permisos de ficha/fotos; subida con `Storage::fake('public')` |
 | `DashboardTest` | El admin ve los totales correctos sobre datos de prueba; el cobrador recibe 403 |
 | `MapaTest` | El cobrador ve el mapa y la ficha del puesto; el visitante es redirigido al login |
+| `ComunicadoTest` | Tablero público solo con avisos vigentes; permisos de administración; CRUD y validación de fechas |
+| `PuestoTest` | El código se genera como `VER-001`, `VER-002` por sección y no se puede sobrescribir desde `store` ni `update` |
 
-En total son 24 pruebas. Los tests existentes actúan como admin mediante el auxiliar `usuario()` del trait `CreaMercado`.
+En total son 29 pruebas. Los tests existentes actúan como admin mediante el auxiliar `usuario()` del trait `CreaMercado`.
 
 ## Fuera de alcance
 
-Los CRUD de secciones, puestos y comerciantes y la concurrencia entre pagos simultáneos no tienen pruebas automatizadas.
+Los CRUD de secciones y comerciantes no tienen pruebas automatizadas; de puestos solo se prueba la generación del código. La concurrencia entre pagos simultáneos tampoco tiene pruebas automatizadas.

@@ -20,6 +20,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Prefijo</th>
                     <th>Tarifa por m²</th>
                     <th>Puestos</th>
                     <th></th>
@@ -29,6 +30,7 @@
                 @forelse ($secciones as $seccion)
                     <tr>
                         <td>{{ $seccion->nombre }}</td>
+                        <td>{{ $seccion->prefijo }}</td>
                         <td>Bs {{ number_format($seccion->tarifa_m2, 2) }}</td>
                         <td>{{ $seccion->puestos_count }}</td>
                         <td>
@@ -45,7 +47,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" style="text-align:center; color: var(--slate)">No hay secciones.</td></tr>
+                    <tr><td colspan="5" style="text-align:center; color: var(--slate)">No hay secciones.</td></tr>
                 @endforelse
             </tbody>
         </table>

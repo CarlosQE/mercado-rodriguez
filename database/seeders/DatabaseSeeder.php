@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // 80 + 100 + 80 + 60 = 320 puestos
         $puestos = collect();
         foreach ([['Carnes', 'CAR', 80, '30.00'], ['Verduras', 'VER', 100, '18.00'], ['Abarrotes', 'ABA', 80, '24.00'], ['Comida', 'COM', 60, '35.00']] as [$nombre, $prefijo, $cantidad, $tarifa]) {
-            $seccion = Seccion::create(['nombre' => $nombre, 'tarifa_m2' => $tarifa]);
+            $seccion = Seccion::create(['nombre' => $nombre, 'prefijo' => $prefijo, 'tarifa_m2' => $tarifa]);
             for ($numero = 1; $numero <= $cantidad; $numero++) {
                 $puestos->push(Puesto::factory()->create([
                     'seccion_id' => $seccion->id,
