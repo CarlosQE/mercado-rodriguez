@@ -23,17 +23,31 @@
         .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
         /* Barra superior */
-        .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: wrap; gap: 12px 24px; }
+        .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: nowrap; gap: 24px; position: relative; }
         .logo { font-size: 22px; letter-spacing: -0.23px; color: var(--ink); text-decoration: none; flex-shrink: 0; }
-        .menu { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; }
-        .menu a { position: relative; color: var(--ink); text-decoration: none; font-size: 15px; padding: 4px 8px; border-radius: 9999px; white-space: nowrap; transition: color 200ms ease-out, background-color 200ms ease-out, transform 200ms cubic-bezier(.2,.8,.2,1); }
-        .menu a::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 1px; height: 2px; border-radius: 9999px; background: var(--sienna); transform: scaleX(0); transform-origin: left center; transition: transform 200ms cubic-bezier(.2,.8,.2,1); }
-        .menu a:hover, .menu a.activo { background: var(--peach); color: var(--sienna); }
-        .menu a:hover { transform: translateY(-1px); }
-        .menu a:hover::after, .menu a.activo::after { transform: scaleX(1); }
-        .menu a.activo::after { animation: subrayado-activo 300ms cubic-bezier(.2,.8,.2,1) backwards; }
-        .menu .usuario { font-size: 14px; color: var(--slate); white-space: nowrap; }
-        .menu form { display: inline-flex; margin: 0; }
+        .nav-hamburguesa { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; padding: 0; border: 1px solid var(--line); border-radius: 9999px; background: var(--paper); color: var(--ink); cursor: pointer; flex-shrink: 0; transition: background-color 180ms ease-out; }
+        .nav-hamburguesa:hover { background: var(--mist); }
+        .menu { display: flex; align-items: center; flex: 1; min-width: 0; }
+        .nav-enlaces { display: flex; align-items: center; flex: 1; flex-wrap: nowrap; gap: 2px; }
+        .nav-enlaces > a, .nav-boton { display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; border: 0; border-radius: 9999px; background: transparent; color: var(--ink); font: inherit; font-size: 15px; line-height: 1.2; text-decoration: none; white-space: nowrap; cursor: pointer; transition: color 180ms ease-out, background-color 180ms ease-out, transform 180ms cubic-bezier(.2,.8,.2,1); }
+        .nav-enlaces > a:hover, .nav-enlaces > a.activo, .nav-boton:hover, .nav-boton.activo, .nav-grupo.abierto > .nav-boton { background: var(--peach); color: var(--sienna); }
+        .nav-enlaces > a:hover, .nav-boton:hover { transform: translateY(-1px); }
+        .nav-grupo { position: relative; }
+        .nav-flecha { width: 12px; height: 12px; flex-shrink: 0; transition: transform 180ms ease-out; }
+        .nav-grupo.abierto > .nav-boton .nav-flecha { transform: rotate(180deg); }
+        .nav-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 70; min-width: 196px; padding: 8px; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 22px 44px -36px rgba(4,23,43,.45); }
+        .nav-grupo.abierto > .nav-panel { display: block; animation: menu-entrada 140ms cubic-bezier(.2,.8,.2,1) backwards; }
+        .nav-panel a { display: block; padding: 8px 12px; border-radius: 10px; color: var(--ink); font-size: 15px; text-decoration: none; white-space: nowrap; transition: color 180ms ease-out, background-color 180ms ease-out; }
+        .nav-panel a:hover { background: var(--fog); }
+        .nav-panel a.activo { background: var(--peach); color: var(--sienna); }
+        .nav-usuario { margin-left: auto; }
+        .nav-usuario > .nav-panel { left: auto; right: 0; min-width: 210px; }
+        .nav-boton-usuario { max-width: 230px; }
+        .usuario-nombre { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .usuario-rol { white-space: nowrap; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--slate); }
+        .nav-panel form { margin: 0; }
+        .nav-cerrar-sesion { display: block; width: 100%; padding: 8px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-size: 15px; text-align: left; cursor: pointer; }
+        .nav-cerrar-sesion:hover { background: var(--fog); }
 
         /* Encabezado de página */
         .titulo { font-size: 44px; line-height: 1.3; letter-spacing: -0.66px; margin-top: 56px; }
@@ -99,9 +113,9 @@
         footer { color: var(--slate); font-size: 15px; padding-bottom: 40px; }
 
         /* Movimiento y transiciones */
-        @keyframes subrayado-activo {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
+        @keyframes menu-entrada {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes contenido-entrada {
             from { opacity: 0; transform: translateY(8px); }
@@ -188,13 +202,31 @@
 
         .aviso { animation: aviso-entrada 350ms cubic-bezier(.2,.8,.2,1) backwards; }
 
-        @media (max-width: 640px) { .titulo { font-size: 32px; } .menu { gap: 6px 16px; } }
+        @media (max-width: 1023.98px) {
+            .barra { padding-top: 18px; padding-bottom: 18px; gap: 16px; }
+            .nav-hamburguesa { display: inline-flex; }
+            .menu { display: none; position: absolute; top: calc(100% - 6px); left: 20px; right: 20px; z-index: 80; flex: none; max-height: calc(100vh - 110px); overflow-y: auto; padding: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 28px 56px -40px rgba(4,23,43,.5); }
+            .menu.menu-abierto { display: block; animation: menu-entrada 160ms cubic-bezier(.2,.8,.2,1) backwards; }
+            .nav-enlaces { flex-direction: column; align-items: stretch; gap: 3px; }
+            .nav-enlaces > a, .nav-boton { width: 100%; justify-content: space-between; white-space: normal; padding: 9px 10px; }
+            .nav-grupo { width: 100%; }
+            .nav-boton { cursor: default; }
+            .nav-flecha { display: none; }
+            .nav-panel { display: block; position: static; min-width: 0; padding: 0 0 8px 12px; border: 0; border-radius: 0; box-shadow: none; }
+            .nav-grupo.abierto > .nav-panel { animation: none; }
+            .nav-panel a { white-space: normal; }
+            .nav-usuario { margin-left: 0; padding-top: 8px; border-top: 1px solid var(--line); }
+            .nav-usuario > .nav-panel { padding: 0 0 0 12px; }
+            .nav-boton-usuario { max-width: none; }
+        }
+
+        @media (max-width: 640px) { .titulo { font-size: 32px; } }
 
         @media (prefers-reduced-motion: reduce) {
             @view-transition { navigation: none; }
             html { scroll-behavior: auto; }
             *, *::before, *::after { animation: none !important; transition: none !important; }
-            .btn:hover, .btn:active, .menu a:hover, .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .comunicado:hover, .mapa-grid .puesto:hover, .mapa-grid .puesto:active, .galeria figure:hover img, .foto-card:hover img, .historia-imagen:hover img { transform: none; }
+            .btn:hover, .btn:active, .nav-enlaces > a:hover, .nav-boton:hover, .indicador:hover, .panel:hover, .tarjeta-mercado:hover, .ficha-puesto .card:hover, .foto-card:hover, .comunicado:hover, .mapa-grid .puesto:hover, .mapa-grid .puesto:active, .galeria figure:hover img, .foto-card:hover img, .historia-imagen:hover img { transform: none; }
             ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
         }
     </style>
@@ -203,34 +235,91 @@
 <body>
     <header class="contenedor barra">
         <a href="{{ route('inicio') }}" class="logo serif">Mercado Rodríguez</a>
-        <nav class="menu">
+
+        <button class="nav-hamburguesa" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menú">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <nav class="menu" id="menu-principal" aria-label="Navegación principal">
             @guest
-                <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
-                <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
-                <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
-                <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Iniciar sesión</a>
-            @else
-                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
-                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">Dashboard</a>
-                @endif
-                <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
-                <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
-                <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
-                <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
-                <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
-                <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
-                <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
-                <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
-                @if (auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN))
+                <div class="nav-enlaces">
                     <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
-                    <a href="{{ route('admin.comunicados.index') }}" class="{{ request()->routeIs('admin.comunicados.*') ? 'activo' : '' }}">Comunicados</a>
-                    <a href="{{ route('admin.fotos.index') }}" class="{{ request()->routeIs('admin.fotos.*') ? 'activo' : '' }}">Fotos</a>
-                @endif
-                <span class="usuario">{{ auth()->user()->name }}</span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="btn btn-ghost btn-sm">Cerrar sesión</button>
-                </form>
+                    <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
+                    <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
+                    <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Ingresar</a>
+                </div>
+            @else
+                @php
+                    $esAdmin = auth()->user()->tieneRol(\App\Models\User::ROL_ADMIN);
+                    $gestionActiva = request()->routeIs('comerciantes.*', 'puestos.*', 'secciones.*', 'asignaciones.*');
+                    $cobrosActiva = request()->routeIs('obligaciones.*', 'pagos.*');
+                    $sitioActivo = request()->routeIs('inicio', 'tablero', 'admin.comunicados.*', 'admin.fotos.*', 'admin.mercado.*');
+                @endphp
+
+                <div class="nav-enlaces">
+                    @if ($esAdmin)
+                        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">Dashboard</a>
+                    @endif
+                    <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
+
+                    <div class="nav-grupo" data-nav-grupo>
+                        <button type="button" class="nav-boton {{ $gestionActiva ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-gestion" aria-haspopup="true">
+                            Gestión
+                            <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="nav-panel" id="nav-gestion">
+                            <a href="{{ route('comerciantes.index') }}" class="{{ request()->routeIs('comerciantes.*') ? 'activo' : '' }}">Comerciantes</a>
+                            <a href="{{ route('puestos.index') }}" class="{{ request()->routeIs('puestos.*') ? 'activo' : '' }}">Puestos</a>
+                            <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">Secciones</a>
+                            <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">Asignaciones</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-grupo" data-nav-grupo>
+                        <button type="button" class="nav-boton {{ $cobrosActiva ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-cobros" aria-haspopup="true">
+                            Cobros
+                            <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="nav-panel" id="nav-cobros">
+                            <a href="{{ route('obligaciones.index') }}" class="{{ request()->routeIs('obligaciones.*') ? 'activo' : '' }}">Obligaciones</a>
+                            <a href="{{ route('pagos.index') }}" class="{{ request()->routeIs('pagos.*') ? 'activo' : '' }}">Pagos</a>
+                        </div>
+                    </div>
+
+                    @if ($esAdmin)
+                        <div class="nav-grupo" data-nav-grupo>
+                            <button type="button" class="nav-boton {{ $sitioActivo ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-sitio" aria-haspopup="true">
+                                Sitio público
+                                <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <div class="nav-panel" id="nav-sitio">
+                                <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
+                                <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
+                                <a href="{{ route('admin.comunicados.index') }}" class="{{ request()->routeIs('admin.comunicados.*') ? 'activo' : '' }}">Comunicados</a>
+                                <a href="{{ route('admin.fotos.index') }}" class="{{ request()->routeIs('admin.fotos.*') ? 'activo' : '' }}">Fotos</a>
+                                <a href="{{ route('admin.mercado.edit') }}" class="{{ request()->routeIs('admin.mercado.*') ? 'activo' : '' }}">Datos del mercado</a>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
+                    @endif
+
+                    <div class="nav-grupo nav-usuario" data-nav-grupo>
+                        <button type="button" class="nav-boton nav-boton-usuario" aria-expanded="false" aria-controls="nav-usuario" aria-haspopup="true">
+                            <span class="usuario-nombre">{{ auth()->user()->name }}</span>
+                            <span class="usuario-rol">{{ $esAdmin ? 'Admin' : 'Cobrador' }}</span>
+                            <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="nav-panel" id="nav-usuario">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="nav-cerrar-sesion">Cerrar sesión</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @endguest
         </nav>
     </header>
@@ -256,6 +345,95 @@
     <footer class="contenedor">
         &copy; {{ date('Y') }} Sistema de gestión del Mercado Rodríguez
     </footer>
+
+    <script>
+        (() => {
+            const menu = document.getElementById('menu-principal');
+            const hamburguesa = document.querySelector('.nav-hamburguesa');
+            const escritorio = window.matchMedia('(min-width: 1024px)');
+            const grupos = [...document.querySelectorAll('[data-nav-grupo]')];
+
+            const cerrarGrupos = () => {
+                grupos.forEach((grupo) => {
+                    grupo.classList.remove('abierto');
+                    grupo.querySelector('.nav-boton')?.setAttribute('aria-expanded', 'false');
+                });
+            };
+
+            const cerrarMenu = () => {
+                if (!menu || !hamburguesa) return;
+
+                menu.classList.remove('menu-abierto');
+                hamburguesa.setAttribute('aria-expanded', 'false');
+            };
+
+            const sincronizarModo = () => {
+                grupos.forEach((grupo) => {
+                    const boton = grupo.querySelector('.nav-boton');
+
+                    if (!boton) return;
+
+                    if (escritorio.matches) {
+                        boton.tabIndex = 0;
+                        boton.setAttribute('aria-expanded', grupo.classList.contains('abierto') ? 'true' : 'false');
+                    } else {
+                        grupo.classList.remove('abierto');
+                        boton.tabIndex = -1;
+                        boton.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            };
+
+            grupos.forEach((grupo) => {
+                const boton = grupo.querySelector('.nav-boton');
+
+                if (!boton) return;
+
+                boton.addEventListener('click', () => {
+                    if (!escritorio.matches) return;
+
+                    const abierto = !grupo.classList.contains('abierto');
+                    cerrarGrupos();
+
+                    if (abierto) {
+                        grupo.classList.add('abierto');
+                        boton.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+
+            hamburguesa?.addEventListener('click', () => {
+                if (!menu) return;
+
+                const abierto = menu.classList.toggle('menu-abierto');
+                hamburguesa.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+                cerrarGrupos();
+            });
+
+            document.addEventListener('click', (evento) => {
+                if (!evento.target.closest('[data-nav-grupo]')) cerrarGrupos();
+                if (!evento.target.closest('.barra')) cerrarMenu();
+            });
+
+            document.addEventListener('keydown', (evento) => {
+                if (evento.key !== 'Escape') return;
+
+                cerrarGrupos();
+
+                if (menu?.classList.contains('menu-abierto')) {
+                    cerrarMenu();
+                    hamburguesa?.focus();
+                }
+            });
+
+            escritorio.addEventListener('change', () => {
+                if (escritorio.matches) cerrarMenu();
+                sincronizarModo();
+            });
+
+            sincronizarModo();
+        })();
+    </script>
     @yield('script')
 </body>
 </html>
