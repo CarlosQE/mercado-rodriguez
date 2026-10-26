@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Puesto extends Model
 {
@@ -22,6 +23,19 @@ class Puesto extends Model
     public function seccion(): BelongsTo
     {
         return $this->belongsTo(Seccion::class, 'seccion_id');
+    }
+
+    public function generarCodigo(Seccion $seccion): string
+    {
+        $prefijo = Str::upper(Str::substr(Str::ascii($seccion->nombre), 0, 3));
+
+        $mayor = static::query()
+            ->where('codigo', 'like', $prefijo.'-%')
+            ->pluck('codigo')
+            ->map(fn (string $codigo) => preg_match('/^'.preg_quote($prefijo, '/').'-(\d+)$/', $codigo, $coincidencias) ? (int) $coincidencias[1] : 0)
+            ->max() ?? 0;
+
+        return $prefijo.'-'.str_pad((string) ($mayor + 1), 3, '0', STR_PAD_LEFT);
     }
 
     public function asignaciones(): HasMany

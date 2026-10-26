@@ -25,7 +25,7 @@ erDiagram
 | Columna | Tipo | Notas |
 |---|---|---|
 | seccion_id | bigint | FK a `secciones` |
-| codigo | varchar(30) | Único, formato `[A-Z0-9-]+` (por ejemplo `CAR-001`) |
+| codigo | varchar(30) | Único, generado automáticamente como `XXX-NNN` (por ejemplo `CAR-001`); no se recibe del formulario ni se modifica al editar |
 | superficie_m2 | numeric(8,2) | Mayor que 0 |
 | estado | varchar(20) | `libre` (por defecto), `ocupado`, `clausurado` |
 

@@ -9,11 +9,16 @@
     @error('seccion_id') <p class="error">{{ $message }}</p> @enderror
 </div>
 
-<div class="campo">
-    <label class="etiqueta">Código</label>
-    <input type="text" name="codigo" value="{{ old('codigo', $puesto->codigo) }}" placeholder="CAR-001" class="input">
-    @error('codigo') <p class="error">{{ $message }}</p> @enderror
-</div>
+@if ($puesto->exists)
+    <div class="campo">
+        <label class="etiqueta">Código</label>
+        <p>{{ $puesto->codigo }}</p>
+    </div>
+@else
+    <div class="campo">
+        <p class="etiqueta">El código se asigna automáticamente al guardar.</p>
+    </div>
+@endif
 
 <div class="campo">
     <label class="etiqueta">Superficie (m²)</label>
