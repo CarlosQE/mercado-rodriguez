@@ -7,14 +7,14 @@
 @push('styles')
     <style>
         .portada-acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
-        .seccion-mercado { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+        .seccion-mercado { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 20px; }
         .tarjeta-mercado { background: var(--mist); border-radius: 24px; padding: 28px; }
         .tarjeta-mercado h3 { font-size: 22px; margin-bottom: 12px; }
         .tarjeta-mercado p { color: var(--slate); margin-bottom: 6px; }
         .bloque { margin-top: 64px; }
         .bloque h2 { font-size: 30px; letter-spacing: -0.4px; margin-bottom: 20px; }
         .prosa p { max-width: 760px; margin-bottom: 18px; color: #33363b; }
-        .galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; }
         .galeria figure { margin: 0; }
         .galeria img { width: 100%; height: 210px; object-fit: cover; border-radius: 20px; display: block; }
         .galeria figcaption { font-size: 15px; color: var(--slate); margin-top: 8px; }

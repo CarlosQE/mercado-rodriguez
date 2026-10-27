@@ -69,6 +69,22 @@ class DashboardTest extends TestCase
         $respuesta->assertSee('Bs 300.00');
     }
 
+    public function test_los_meses_de_recaudacion_llegan_en_orden_cronologico(): void
+    {
+        $this->actingAs($this->usuario(User::ROL_ADMIN));
+
+        $respuesta = $this->get(route('dashboard'))->assertOk();
+        $meses = $respuesta->viewData('meses');
+
+        $esperados = collect(range(5, 0))
+            ->map(fn ($mesesAtras) => now()->startOfMonth()->subMonths($mesesAtras)->format('Y-m'))
+            ->all();
+
+        $this->assertCount(6, $meses);
+        $this->assertSame($esperados, $meses->pluck('clave')->all());
+        $this->assertSame(now()->format('Y-m'), $meses->last()['clave']);
+    }
+
     public function test_el_cobrador_no_puede_abrir_el_dashboard(): void
     {
         $this->actingAs($this->usuario(User::ROL_COBRADOR));

@@ -14,13 +14,16 @@
             --slate: #777b86; --ash: #979799; --smoke: #a3a6af;
             --peach: #fbe1d1; --sienna: #5d2a1a; --line: #ececec;
         }
-        html { scroll-behavior: smooth; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; max-width: 100%; }
         @view-transition { navigation: auto; }
         ::view-transition-old(root),
         ::view-transition-new(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(.2,.8,.2,1); }
-        body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.35; color: var(--ink); background: var(--paper); min-height: 100vh; display: flex; flex-direction: column; }
+        body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.35; color: var(--ink); background: var(--paper); min-height: 100vh; max-width: 100%; display: flex; flex-direction: column; overflow-wrap: anywhere; }
+        img, svg, iframe, video, canvas { max-width: 100%; }
+        img, iframe, video { height: auto; }
         .serif { font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; }
-        .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; min-width: 0; }
 
         /* Barra superior */
         .barra { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; flex-wrap: nowrap; gap: 24px; position: relative; }
@@ -62,8 +65,9 @@
         .btn-sm { padding: 5px 14px; font-size: 14px; }
 
         /* Superficies */
-        .card { background: var(--mist); border-radius: 24px; padding: 32px; max-width: 520px; }
-        .artefacto { background: var(--paper); border-radius: 20px; box-shadow: 0 0 0 1px rgba(4,23,43,.05), 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1); overflow: hidden; }
+        .card { background: var(--mist); border-radius: 24px; padding: 32px; max-width: 520px; min-width: 0; }
+        .artefacto { background: var(--paper); border-radius: 20px; box-shadow: 0 0 0 1px rgba(4,23,43,.05), 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1); max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+        .tabla-contenedor { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
         .aviso { border-radius: 16px; padding: 12px 20px; margin-bottom: 24px; background: var(--mist); }
         .aviso-error { background: var(--peach); color: var(--sienna); }
 
@@ -74,7 +78,7 @@
         .historia-placeholder { aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 24px; background: var(--peach); color: var(--sienna); text-align: center; font-family: 'Source Serif 4', Georgia, serif; font-size: 22px; }
         .bloque-encabezado { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
         .bloque-encabezado h2 { margin-bottom: 0; }
-        .comunicados-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .comunicados-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
         .comunicado { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px; border-radius: 24px; background: var(--mist); }
         .comunicado h3 { font-size: 22px; line-height: 1.2; padding-right: 72px; }
         .comunicado-contenido { color: #33363b; }
@@ -103,10 +107,15 @@
         .filtros { display: flex; flex-wrap: wrap; gap: 8px; }
         .filtros .input { width: auto; }
         .tabla { width: 100%; border-collapse: collapse; }
+        .tabla th, .tabla td { overflow-wrap: anywhere; }
         .tabla th { text-align: left; font-size: 14px; font-weight: 400; color: var(--ash); padding: 14px 20px; }
         .tabla td { padding: 14px 20px; border-top: 1px solid var(--line); }
         .tabla tr:hover td { background: var(--fog); }
-        .acciones { display: flex; gap: 8px; }
+        .acciones { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
+        .herramientas > *, .filtros > *, .panel, .indicador { min-width: 0; }
+        .filtros { max-width: 100%; }
+        .filtros .input { max-width: 100%; }
+        .dos-columnas > *, .comunicados-grid > *, .foto-grid > *, .seccion-mercado > *, .galeria > *, .historia-grid > * { min-width: 0; }
         .etiqueta-estado { font-size: 14px; color: var(--slate); }
         .etiqueta-estado.clausurado { background: var(--peach); color: var(--sienna); padding: 3px 12px; border-radius: 9999px; }
 
@@ -180,6 +189,10 @@
         .tabla tbody tr:nth-child(4) { animation-delay: 90ms; }
         .tabla tbody tr:nth-child(5) { animation-delay: 120ms; }
         .tabla tbody tr:nth-child(6) { animation-delay: 150ms; }
+        .tabla tbody tr:nth-child(7) { animation-delay: 180ms; }
+        .tabla tbody tr:nth-child(8) { animation-delay: 210ms; }
+        .tabla tbody tr:nth-child(9) { animation-delay: 240ms; }
+        .tabla tbody tr:nth-child(10) { animation-delay: 270ms; }
 
         .puesto { transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease-out, background-color 180ms ease-out, color 180ms ease-out; }
         .mapa-grid .puesto { position: relative; }
@@ -192,13 +205,13 @@
         .galeria img, .foto-card img, .historia-imagen img { animation: imagen-entrada 400ms ease-out backwards; transition: transform 250ms cubic-bezier(.2,.8,.2,1); }
         .galeria figure:hover img, .foto-card:hover img, .historia-imagen:hover img { transform: scale(1.03); }
 
-        .barra-ocupacion span { transform-origin: left center; animation: crecer-x 400ms cubic-bezier(.2,.8,.2,1) backwards; }
-        .grafico .barra-mes { transform-origin: bottom center; animation: crecer-y 400ms cubic-bezier(.2,.8,.2,1) backwards; }
-        .grafico .columna:nth-child(2) .barra-mes { animation-delay: 50ms; }
-        .grafico .columna:nth-child(3) .barra-mes { animation-delay: 100ms; }
-        .grafico .columna:nth-child(4) .barra-mes { animation-delay: 150ms; }
-        .grafico .columna:nth-child(5) .barra-mes { animation-delay: 200ms; }
-        .grafico .columna:nth-child(6) .barra-mes { animation-delay: 250ms; }
+        .barra-ocupacion span { transform-origin: left center; animation: crecer-x 800ms cubic-bezier(.2,.8,.2,1) backwards; }
+        .grafico .barra-mes { transform-origin: bottom center; animation: crecer-y 800ms cubic-bezier(.2,.8,.2,1) backwards; }
+        .grafico .columna:nth-child(2) .barra-mes { animation-delay: 100ms; }
+        .grafico .columna:nth-child(3) .barra-mes { animation-delay: 200ms; }
+        .grafico .columna:nth-child(4) .barra-mes { animation-delay: 300ms; }
+        .grafico .columna:nth-child(5) .barra-mes { animation-delay: 400ms; }
+        .grafico .columna:nth-child(6) .barra-mes { animation-delay: 500ms; }
 
         .aviso { animation: aviso-entrada 350ms cubic-bezier(.2,.8,.2,1) backwards; }
 
@@ -210,17 +223,25 @@
             .nav-enlaces { flex-direction: column; align-items: stretch; gap: 3px; }
             .nav-enlaces > a, .nav-boton { width: 100%; justify-content: space-between; white-space: normal; padding: 9px 10px; }
             .nav-grupo { width: 100%; }
-            .nav-boton { cursor: default; }
-            .nav-flecha { display: none; }
-            .nav-panel { display: block; position: static; min-width: 0; padding: 0 0 8px 12px; border: 0; border-radius: 0; box-shadow: none; }
-            .nav-grupo.abierto > .nav-panel { animation: none; }
+            .nav-flecha { display: block; }
+            .nav-panel { display: block; position: static; min-width: 0; max-height: 0; padding: 0 0 0 12px; border: 0; border-radius: 0; box-shadow: none; opacity: 0; visibility: hidden; pointer-events: none; overflow: hidden; transition: max-height 200ms cubic-bezier(.2,.8,.2,1), opacity 160ms ease-out, padding 200ms cubic-bezier(.2,.8,.2,1), visibility 0s linear 200ms; }
+            .nav-grupo.abierto > .nav-panel { max-height: 320px; padding: 4px 0 8px 12px; opacity: 1; visibility: visible; pointer-events: auto; overflow-y: auto; animation: none; transition: max-height 200ms cubic-bezier(.2,.8,.2,1), opacity 160ms ease-out, padding 200ms cubic-bezier(.2,.8,.2,1), visibility 0s; }
             .nav-panel a { white-space: normal; }
             .nav-usuario { margin-left: 0; padding-top: 8px; border-top: 1px solid var(--line); }
             .nav-usuario > .nav-panel { padding: 0 0 0 12px; }
             .nav-boton-usuario { max-width: none; }
         }
 
-        @media (max-width: 640px) { .titulo { font-size: 32px; } }
+        @media (max-width: 640px) {
+            .titulo { font-size: 32px; }
+            .card { padding: 24px; }
+            .panel { padding: 20px; }
+            .tabla th, .tabla td { padding: 12px 14px; }
+            .artefacto > .tabla { min-width: 560px; }
+            .tabla-contenedor > .tabla { min-width: 480px; }
+            .grafico { gap: 8px; }
+            .grafico .monto-mes { font-size: 11px; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             @view-transition { navigation: none; }
@@ -264,7 +285,7 @@
                     @endif
                     <a href="{{ route('mapa.index') }}" class="{{ request()->routeIs('mapa.*') ? 'activo' : '' }}">Mapa</a>
 
-                    <div class="nav-grupo" data-nav-grupo>
+                    <div class="nav-grupo" data-nav-grupo @if ($gestionActiva) data-nav-activo @endif>
                         <button type="button" class="nav-boton {{ $gestionActiva ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-gestion" aria-haspopup="true">
                             Gestión
                             <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -277,7 +298,7 @@
                         </div>
                     </div>
 
-                    <div class="nav-grupo" data-nav-grupo>
+                    <div class="nav-grupo" data-nav-grupo @if ($cobrosActiva) data-nav-activo @endif>
                         <button type="button" class="nav-boton {{ $cobrosActiva ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-cobros" aria-haspopup="true">
                             Cobros
                             <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -289,7 +310,7 @@
                     </div>
 
                     @if ($esAdmin)
-                        <div class="nav-grupo" data-nav-grupo>
+                        <div class="nav-grupo" data-nav-grupo @if ($sitioActivo) data-nav-activo @endif>
                             <button type="button" class="nav-boton {{ $sitioActivo ? 'activo' : '' }}" aria-expanded="false" aria-controls="nav-sitio" aria-haspopup="true">
                                 Sitio público
                                 <svg class="nav-flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -353,6 +374,11 @@
             const escritorio = window.matchMedia('(min-width: 1024px)');
             const grupos = [...document.querySelectorAll('[data-nav-grupo]')];
 
+            const abrirGrupo = (grupo) => {
+                grupo.classList.add('abierto');
+                grupo.querySelector('.nav-boton')?.setAttribute('aria-expanded', 'true');
+            };
+
             const cerrarGrupos = () => {
                 grupos.forEach((grupo) => {
                     grupo.classList.remove('abierto');
@@ -360,11 +386,20 @@
                 });
             };
 
+            const abrirGrupoActivo = () => {
+                if (escritorio.matches) return;
+
+                const activo = grupos.find((grupo) => grupo.hasAttribute('data-nav-activo'));
+
+                if (activo) abrirGrupo(activo);
+            };
+
             const cerrarMenu = () => {
                 if (!menu || !hamburguesa) return;
 
                 menu.classList.remove('menu-abierto');
                 hamburguesa.setAttribute('aria-expanded', 'false');
+                hamburguesa.setAttribute('aria-label', 'Abrir menú');
             };
 
             const sincronizarModo = () => {
@@ -373,14 +408,8 @@
 
                     if (!boton) return;
 
-                    if (escritorio.matches) {
-                        boton.tabIndex = 0;
-                        boton.setAttribute('aria-expanded', grupo.classList.contains('abierto') ? 'true' : 'false');
-                    } else {
-                        grupo.classList.remove('abierto');
-                        boton.tabIndex = -1;
-                        boton.setAttribute('aria-expanded', 'true');
-                    }
+                    boton.tabIndex = 0;
+                    boton.setAttribute('aria-expanded', grupo.classList.contains('abierto') ? 'true' : 'false');
                 });
             };
 
@@ -390,15 +419,10 @@
                 if (!boton) return;
 
                 boton.addEventListener('click', () => {
-                    if (!escritorio.matches) return;
-
                     const abierto = !grupo.classList.contains('abierto');
                     cerrarGrupos();
 
-                    if (abierto) {
-                        grupo.classList.add('abierto');
-                        boton.setAttribute('aria-expanded', 'true');
-                    }
+                    if (abierto) abrirGrupo(grupo);
                 });
             });
 
@@ -407,11 +431,14 @@
 
                 const abierto = menu.classList.toggle('menu-abierto');
                 hamburguesa.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+                hamburguesa.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
                 cerrarGrupos();
+
+                if (abierto) abrirGrupoActivo();
             });
 
             document.addEventListener('click', (evento) => {
-                if (!evento.target.closest('[data-nav-grupo]')) cerrarGrupos();
+                if (escritorio.matches && !evento.target.closest('[data-nav-grupo]')) cerrarGrupos();
                 if (!evento.target.closest('.barra')) cerrarMenu();
             });
 
@@ -427,11 +454,19 @@
             });
 
             escritorio.addEventListener('change', () => {
-                if (escritorio.matches) cerrarMenu();
+                if (escritorio.matches) {
+                    cerrarMenu();
+                    cerrarGrupos();
+                } else {
+                    cerrarGrupos();
+                    abrirGrupoActivo();
+                }
+
                 sincronizarModo();
             });
 
             sincronizarModo();
+            abrirGrupoActivo();
         })();
     </script>
     @yield('script')

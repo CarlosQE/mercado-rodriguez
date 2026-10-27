@@ -53,7 +53,7 @@ class DashboardController extends Controller
             ->get()
             ->keyBy(fn ($fila) => sprintf('%04d-%02d', $fila->anio, $fila->mes));
 
-        $meses = collect(range(5, 0))->map(function ($i) use ($desde, $recaudacion) {
+        $meses = collect(range(0, 5))->map(function ($i) use ($desde, $recaudacion) {
             $fecha = $desde->copy()->addMonths($i);
             $clave = $fecha->format('Y-m');
 
