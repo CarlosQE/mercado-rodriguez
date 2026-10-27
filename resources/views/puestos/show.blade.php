@@ -6,7 +6,7 @@
 
 @push('styles')
     <style>
-        .ficha-puesto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .ficha-puesto { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
         .dato { color: var(--slate); font-size: 15px; }
         .linea-tiempo { border-left: 2px solid var(--line); margin-left: 8px; padding-left: 22px; }
         .linea-tiempo article { position: relative; margin-bottom: 22px; }

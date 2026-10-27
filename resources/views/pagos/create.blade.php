@@ -6,7 +6,7 @@
 
 @section('content')
     <form method="GET" action="{{ route('pagos.create') }}" class="filtros" style="margin-bottom: 24px">
-        <select name="comerciante_id" class="input" onchange="this.form.submit()" style="min-width: 320px">
+        <select name="comerciante_id" class="input" onchange="this.form.submit()" style="width: 100%; min-width: 0">
             <option value="">Selecciona un comerciante con deudas</option>
             @foreach ($comerciantes as $c)
                 <option value="{{ $c->id }}" @selected(optional($comerciante)->id === $c->id)>{{ $c->apellidos }}, {{ $c->nombres }} ({{ $c->documento }})</option>

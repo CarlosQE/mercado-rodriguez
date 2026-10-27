@@ -6,7 +6,7 @@
 
 @push('styles')
     <style>
-        .foto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .foto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 20px; }
         .foto-card { background: var(--mist); border-radius: 24px; padding: 20px; }
         .foto-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; display: block; margin-bottom: 16px; }
         .foto-card .acciones { margin-top: 8px; }
