@@ -7,17 +7,22 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminPassword = config('demo.admin_password');
+        $cobradorPassword = config('demo.cobrador_password');
+        if (app()->environment('production') && (! $adminPassword || ! $cobradorPassword)) {
+            throw new \RuntimeException('Configure DEMO_ADMIN_PASSWORD y DEMO_COBRADOR_PASSWORD antes de sembrar en producción.');
+        }
         User::create([
             'name' => 'Administración del Mercado',
             'email' => 'admin@mercado.test',
-            'password' => 'mercado123',
+            'password' => $adminPassword ?: 'mercado123',
             'rol' => User::ROL_ADMIN,
         ]);
 
         User::create([
             'name' => 'Cobrador de Turno',
             'email' => 'cobrador@mercado.test',
-            'password' => 'mercado123',
+            'password' => $cobradorPassword ?: 'mercado123',
             'rol' => User::ROL_COBRADOR,
         ]);
 

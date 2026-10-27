@@ -10,6 +10,11 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(web: __DIR__.'/../routes/web.php', commands: __DIR__.'/../routes/console.php', health: '/up')
     ->withMiddleware(function (Middleware $middleware): void {
+        // Render terminates HTTPS before forwarding requests to Apache.
+        // Enable only when the app is reachable through the hosting proxy.
+        if (env('TRUST_HOSTING_PROXY', false)) {
+            $middleware->trustProxies(at: '*');
+        }
         $middleware->alias(['rol' => VerificarRol::class]);
 
         RedirectIfAuthenticated::redirectUsing(

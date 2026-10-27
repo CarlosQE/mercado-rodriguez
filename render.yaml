@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: mercado-rodriguez
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_TIMEZONE
+        value: America/La_Paz
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: TRUST_HOSTING_PROXY
+        value: "true"
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: CACHE_STORE
+        value: array
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: PORT
+        value: "80"
+      - key: INITIALIZE_DEMO
+        value: "true"
+      - key: DEMO_ADMIN_PASSWORD
+        sync: false
+      - key: DEMO_COBRADOR_PASSWORD
+        sync: false

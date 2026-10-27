@@ -1,0 +1,39 @@
+# Isolated, disposable local deployment check. Never use these credentials online.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: mercado_deploy_test
+      POSTGRES_USER: smoke
+      POSTGRES_PASSWORD: local-test-only
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U smoke -d mercado_deploy_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  web:
+    image: mercado-rodriguez-deploy:local
+    ports:
+      - "127.0.0.1:18087:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "01234567890123456789012345678901"
+      APP_URL: http://127.0.0.1:18087
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_DATABASE: mercado_deploy_test
+      DB_USERNAME: smoke
+      DB_PASSWORD: local-test-only
+      SESSION_DRIVER: cookie
+      SESSION_SECURE_COOKIE: "false"
+      CACHE_STORE: array
+      INITIALIZE_DEMO: "true"
+      DEMO_ADMIN_PASSWORD: admin-local-test-only
+      DEMO_COBRADOR_PASSWORD: collector-local-test-only
+    depends_on:
+      db:
+        condition: service_healthy
