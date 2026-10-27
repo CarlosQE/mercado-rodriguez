@@ -6,7 +6,12 @@
 
 @push('styles')
     <style>
-        .portada-acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
+        .portada-acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+        .banner-ruleta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 56px; padding: 24px 28px; border: 1px solid var(--line); border-radius: 24px; background: var(--fog); }
+        .banner-ruleta h2 { margin-top: 8px; font-size: 26px; line-height: 1.2; letter-spacing: -0.03em; }
+        .banner-ruleta p { max-width: 560px; margin-top: 4px; color: var(--slate); font-size: 15px; }
+        .banner-ruleta-etiqueta { display: inline-flex; padding: 3px 10px; border-radius: 9999px; background: var(--peach); color: var(--sienna); font-size: 13px; }
+        .banner-ruleta .btn { flex-shrink: 0; }
         .seccion-mercado { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 20px; }
         .tarjeta-mercado { background: var(--mist); border-radius: 24px; padding: 28px; }
         .tarjeta-mercado h3 { font-size: 22px; margin-bottom: 12px; }
@@ -28,6 +33,17 @@
             <a href="{{ route('login') }}" class="btn btn-ghost">Iniciar sesión</a>
         @endguest
     </div>
+
+    @guest
+        <section class="banner-ruleta">
+            <div>
+                <span class="banner-ruleta-etiqueta">Juego rápido</span>
+                <h2 class="serif">¿Cuánto sabes de web?</h2>
+                <p>Gira la ruleta, responde las preguntas y descubre cuánto aprendiste sobre el proyecto.</p>
+            </div>
+            <a href="{{ route('ruleta') }}" class="btn">Gira la ruleta</a>
+        </section>
+    @endguest
 
     @if ($dato)
         <section class="bloque" style="margin-top: 0">
