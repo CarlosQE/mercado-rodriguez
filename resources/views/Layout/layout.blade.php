@@ -269,6 +269,7 @@
                     <a href="{{ route('inicio') }}" class="{{ request()->routeIs('inicio') ? 'activo' : '' }}">El mercado</a>
                     <a href="{{ route('tablero') }}" class="{{ request()->routeIs('tablero') ? 'activo' : '' }}">Tablero</a>
                     <a href="{{ route('puestos.libres') }}" class="{{ request()->routeIs('puestos.libres') ? 'activo' : '' }}">Puestos libres</a>
+                    <a href="{{ route('ruleta') }}" class="{{ request()->routeIs('ruleta') ? 'activo' : '' }}">Ruleta</a>
                     <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'activo' : '' }}">Ingresar</a>
                 </div>
             @else

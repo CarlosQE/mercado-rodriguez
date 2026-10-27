@@ -12,12 +12,14 @@ use App\Http\Controllers\MapaController;
 use App\Http\Controllers\ObligacionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PuestoController;
+use App\Http\Controllers\RuletaController;
 use App\Http\Controllers\SeccionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [InicioController::class, 'index'])->name('inicio');
 Route::get('tablero', [ComunicadoController::class, 'tablero'])->name('tablero');
 Route::get('puestos-libres', [PuestoController::class, 'libres'])->name('puestos.libres');
+Route::get('ruleta', [RuletaController::class, 'index'])->middleware('guest')->name('ruleta');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'create'])->name('login');
